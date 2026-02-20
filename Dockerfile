@@ -77,6 +77,10 @@ server {
 }
 EOF
 
+# Create entrypoint script for runtime environment variable substitution
+RUN printf '#!/bin/ash\n# Substitute environment variables at runtime\nfind /usr/share/nginx/html -type f \\( -name "*.js" -o -name "*.html" \\) -exec sed -i "s|http://localhost:3000|${VITE_API_URL:-http://localhost:3000}|g" {} +\nexec "$@"\n' > /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
+
 # Copy built files from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
@@ -87,5 +91,6 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost/ || exit 1
 
-# Start nginx
+# Start with entrypoint for env substitution
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
