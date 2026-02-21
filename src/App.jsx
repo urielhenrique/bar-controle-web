@@ -12,6 +12,8 @@ import {
 import PageNotFound from "./lib/PageNotFound";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import Login from "@/pages/Login";
+import LoginV2 from "@/pages/LoginV2";
+import AdminDashboard from "@/pages/AdminDashboard";
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -85,6 +87,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/login-v2" element={<LoginV2 />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       {isLogged ? (
         <>
           <Route path="/*" element={<AuthenticatedApp />} />
