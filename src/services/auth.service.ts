@@ -49,6 +49,25 @@ class AuthService {
     return response;
   }
 
+  /**
+   * Fazer login com Google OAuth
+   */
+  async loginWithGoogle(
+    credential: string,
+  ): Promise<{ user: User; token: string }> {
+    const response = await apiClient.post<{ user: User; token: string }>(
+      "/auth/google",
+      {
+        credential,
+      },
+    );
+    if (response.token) {
+      apiClient.setToken(response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+    }
+    return response;
+  }
+
   getToken(): string | null {
     return apiClient.getToken();
   }

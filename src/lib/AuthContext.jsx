@@ -75,6 +75,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async (credential) => {
+    try {
+      setIsLoadingAuth(true);
+      setAuthError(null);
+      const response = await authService.loginWithGoogle(credential);
+      setUser(response.user);
+      setIsAuthenticated(true);
+      setIsLoadingAuth(false);
+      return response;
+    } catch (error) {
+      console.error("Erro ao fazer login com Google:", error);
+      setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setAuthError({
+        type: "login_failed",
+        message: error.message || "Erro ao fazer login com Google",
+      });
+      throw error;
+    }
+  };
+
   const logout = (shouldRedirect = true) => {
     authService.logout();
     setUser(null);
@@ -98,6 +119,7 @@ export const AuthProvider = ({ children }) => {
         isLoadingAuth,
         authError,
         login,
+        loginWithGoogle,
         logout,
         navigateToLogin,
         checkAppState,

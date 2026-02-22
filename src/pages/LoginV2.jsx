@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,7 @@ export default function LoginV2() {
   const [nome, setNome] = useState("");
   const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -64,6 +65,40 @@ export default function LoginV2() {
       setIsLoading(false);
     }
   };
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setIsLoading(true);
+        setError("");
+
+        // Obter informações do usuário do Google
+        const userInfoResponse = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          },
+        );
+
+        const userInfo = await userInfoResponse.json();
+
+        // Enviar para o backend usando o contexto
+        await loginWithGoogle(JSON.stringify(userInfo));
+        navigate("/");
+      } catch (err) {
+        console.error("Erro no login com Google:", err);
+        setError(err.message || "Erro ao fazer login com Google");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: (error) => {
+      console.error("Erro OAuth:", error);
+      setError("Erro ao autenticar com Google");
+    },
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -181,6 +216,8 @@ export default function LoginV2() {
             <Button
               type="button"
               variant="outline"
+              onClick={() => handleGoogleLogin()}
+              disabled={isLoading}
               className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
             >
               <img
