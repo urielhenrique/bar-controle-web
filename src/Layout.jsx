@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useAuth } from "@/lib/AuthContext";
 import {
   LayoutDashboard,
   Package,
@@ -9,6 +10,7 @@ import {
   Menu,
   X,
   Beer,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +23,7 @@ const NAV_ITEMS = [
 
 export default function Layout({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { logout, user } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -84,6 +87,13 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 );
               })}
+              <button
+                onClick={() => logout()}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-red-50 hover:text-red-700 w-full"
+              >
+                <LogOut className="w-5 h-5" />
+                Sair
+              </button>
             </nav>
           </div>
         </div>
@@ -128,12 +138,26 @@ export default function Layout({ children, currentPageName }) {
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="px-3 py-3 bg-gray-50 rounded-xl mt-4">
-            <p className="text-xs text-gray-400 text-center">BarStock v1.0</p>
-            <p className="text-xs text-gray-300 text-center mt-0.5">
-              Gestão simples de estoque
-            </p>
+          {/* User Info & Logout */}
+          <div className="mt-auto space-y-2">
+            {user && (
+              <div className="px-3 py-2 bg-gray-50 rounded-xl">
+                <p className="text-xs font-medium text-gray-700 truncate">
+                  {user.nome}
+                </p>
+                <p className="text-xs text-gray-400 truncate">{user.email}</p>
+              </div>
+            )}
+            <button
+              onClick={() => logout()}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-500 hover:bg-red-50 hover:text-red-700 w-full"
+            >
+              <LogOut className="w-5 h-5" />
+              Sair
+            </button>
+            <div className="px-3 py-2 bg-gray-50 rounded-xl">
+              <p className="text-xs text-gray-400 text-center">BarStock v1.0</p>
+            </div>
           </div>
         </div>
       </div>

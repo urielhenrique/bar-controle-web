@@ -94,7 +94,7 @@ const AppRoutes = () => {
           <Route path="/*" element={<AuthenticatedApp />} />
         </>
       ) : (
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login-v2" replace />} />
       )}
     </Routes>
   );
