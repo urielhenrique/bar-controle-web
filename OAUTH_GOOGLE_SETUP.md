@@ -40,7 +40,25 @@ https://seudominio.com/login-v2
 
 ---
 
-## 🚨 Implementação Necessária no Backend
+## ✅ Implementação Concluída no Backend
+
+### Status: IMPLEMENTADO ✓
+
+O backend já possui:
+
+- ✅ Rota `POST /auth/google` implementada
+- ✅ Validação do token do Google com `google-auth-library`
+- ✅ Criação automática de usuário e estabelecimento
+- ✅ Geração de JWT token
+- ✅ Variável `GOOGLE_CLIENT_ID` configurada no `.env`
+
+**Localização:** `C:\Users\uriel\Project\backend`
+
+**Documentação detalhada:** Ver `GOOGLE_OAUTH_IMPLEMENTATION.md` no backend
+
+---
+
+## 🚨 ~~Implementação Necessária no Backend~~ ✅ CONCLUÍDO
 
 O backend precisa criar a seguinte rota para processar o login OAuth:
 
