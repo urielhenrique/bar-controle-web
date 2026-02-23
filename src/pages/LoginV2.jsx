@@ -257,7 +257,7 @@ export default function LoginV2() {
                 placeholder="Seu Bar"
                 value={nomeEstabelecimento}
                 onChange={(e) => setNomeEstabelecimento(e.target.value)}
-                className="bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
+                className="bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
                 disabled={isLoading}
               />
             </div>
@@ -269,7 +269,7 @@ export default function LoginV2() {
                 placeholder="João Silva"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className="bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
+                className="bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
                 disabled={isLoading}
               />
             </div>
@@ -283,7 +283,7 @@ export default function LoginV2() {
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
+                  className="pl-10 bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
                   disabled={isLoading}
                 />
               </div>
@@ -298,7 +298,7 @@ export default function LoginV2() {
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
+                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
                   disabled={isLoading}
                 />
                 <button
