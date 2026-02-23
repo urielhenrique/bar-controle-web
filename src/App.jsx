@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import PageNotFound from "./lib/PageNotFound";
 import { AuthProvider, useAuth } from "@/lib/AuthContext";
-import Login from "@/pages/Login";
 import LoginV2 from "@/pages/LoginV2";
 import AdminDashboard from "@/pages/AdminDashboard";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
@@ -92,15 +91,14 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/terms-of-service" element={<TermsOfService />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/login-v2" element={<LoginV2 />} />
+      <Route path="/login" element={<LoginV2 />} />
       <Route path="/admin" element={<AdminDashboard />} />
       {isLogged ? (
         <>
           <Route path="/*" element={<AuthenticatedApp />} />
         </>
       ) : (
-        <Route path="*" element={<Navigate to="/login-v2" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       )}
     </Routes>
   );

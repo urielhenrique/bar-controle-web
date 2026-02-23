@@ -103,12 +103,12 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
 
     if (shouldRedirect) {
-      window.location.href = "/login-v2";
+      window.location.href = "/login";
     }
   };
 
   const navigateToLogin = () => {
-    window.location.href = "/login-v2";
+    window.location.href = "/login";
   };
 
   return (

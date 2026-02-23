@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -291,13 +291,35 @@ export default function LoginV2() {
         )}
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-slate-400">
+        <div className="mt-8 text-center text-sm text-slate-400 space-y-4">
           <p>Primeiros passos no Bar Stock SaaS?</p>
           <p className="mt-2">
             Teste com:{" "}
             <strong className="text-slate-300">admin@barstock.com.br</strong>
           </p>
           <p className="text-slate-500">Senha: Admin@123456</p>
+
+          {/* Legal Links */}
+          <div className="flex flex-wrap gap-4 justify-center mt-6 pt-4 border-t border-slate-700">
+            <Link
+              to="/privacy-policy"
+              className="text-slate-400 hover:text-slate-300 transition-colors"
+            >
+              Política de Privacidade
+            </Link>
+            <Link
+              to="/terms-of-service"
+              className="text-slate-400 hover:text-slate-300 transition-colors"
+            >
+              Termos de Serviço
+            </Link>
+            <a
+              href="mailto:uriel.henrique.gomes.uh@gmail.com"
+              className="text-slate-400 hover:text-slate-300 transition-colors"
+            >
+              Contato
+            </a>
+          </div>
         </div>
       </div>
     </div>
