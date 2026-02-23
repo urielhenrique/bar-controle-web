@@ -100,7 +100,7 @@ export default function LoginV2() {
               {/* Container do logo */}
               <div className="relative flex items-center justify-center">
                 <img
-                  src="/BarStock.png"
+                  src="/BarStockLogo.png"
                   alt="Bar Stock"
                   className="w-32 h-32 object-contain drop-shadow-2xl"
                 />
