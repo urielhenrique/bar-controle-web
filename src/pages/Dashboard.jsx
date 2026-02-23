@@ -58,6 +58,7 @@ export default function Dashboard() {
         valorEstoque: 0,
         valorInvestido: 0,
         valorPotencialVenda: 0,
+        receitaRealVendas: 0, // 💰 Receita real das vendas
         margemEstimada: 0,
         produtosRepor: [],
       };
@@ -132,6 +133,11 @@ export default function Dashboard() {
       0,
     );
 
+    // 💰 RECEITA REAL: Soma dos valores das vendas (saídas) realizadas
+    const receitaRealVendas = movimentacoes
+      .filter((m) => m.tipo === "Saída")
+      .reduce((sum, m) => sum + (m.valorTotal || 0), 0);
+
     const margemEstimada =
       valorInvestido > 0
         ? ((valorPotencialVenda - valorInvestido) / valorInvestido) * 100
@@ -151,6 +157,7 @@ export default function Dashboard() {
       valorEstoque,
       valorInvestido,
       valorPotencialVenda,
+      receitaRealVendas, // 💰 Valor real que entrou no caixa
       margemEstimada,
       produtosRepor,
     };
@@ -237,11 +244,11 @@ export default function Dashboard() {
               subtitle="Custo total"
             />
             <StatCard
-              title="Valor Potencial de Venda"
-              value={`R$\u00A0${stats.valorPotencialVenda.toFixed(2)}`}
+              title="Receita de Vendas"
+              value={`R$\u00A0${stats.receitaRealVendas.toFixed(2)}`}
               icon={TrendingUp}
               color="emerald"
-              subtitle="Receita em estoque"
+              subtitle="Total em caixa"
             />
             <StatCard
               title="Margem Estimada"
