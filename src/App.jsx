@@ -14,6 +14,8 @@ import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import Login from "@/pages/Login";
 import LoginV2 from "@/pages/LoginV2";
 import AdminDashboard from "@/pages/AdminDashboard";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
 import apiClient from "@/api/api";
 import { useEffect } from "react";
 
@@ -88,6 +90,8 @@ const AppRoutes = () => {
 
   return (
     <Routes>
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-service" element={<TermsOfService />} />
       <Route path="/login" element={<Login />} />
       <Route path="/login-v2" element={<LoginV2 />} />
       <Route path="/admin" element={<AdminDashboard />} />
