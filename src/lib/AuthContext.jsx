@@ -97,6 +97,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (nomeEstabelecimento, nome, email, senha) => {
+    try {
+      setIsLoadingAuth(true);
+      setAuthError(null);
+      const response = await authService.register(
+        nomeEstabelecimento,
+        nome,
+        email,
+        senha,
+      );
+      setUser(response.user);
+      setIsAuthenticated(true);
+      setIsLoadingAuth(false);
+      return response;
+    } catch (error) {
+      console.error("Erro ao criar conta:", error);
+      setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setAuthError({
+        type: "register_failed",
+        message: error.message || "Erro ao criar conta",
+      });
+      throw error;
+    }
+  };
+
   const logout = async (shouldRedirect = true) => {
     await authService.logout();
     setUser(null);
@@ -121,6 +147,7 @@ export const AuthProvider = ({ children }) => {
         authError,
         login,
         loginWithGoogle,
+        register,
         logout,
         navigateToLogin,
         checkAppState,

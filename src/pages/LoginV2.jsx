@@ -27,7 +27,7 @@ export default function LoginV2() {
   const [nome, setNome] = useState("");
   const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
   const navigate = useNavigate();
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, register } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -67,8 +67,9 @@ export default function LoginV2() {
         return;
       }
 
-      // Implementar signup - por enquanto apenas redireciona
-      setError("Signup em desenvolvimento");
+      // Criar conta e fazer login automaticamente
+      await register(nomeEstabelecimento, nome, email, password);
+      navigate("/");
     } catch (err) {
       setError(err.message || "Erro ao criar conta");
     } finally {
