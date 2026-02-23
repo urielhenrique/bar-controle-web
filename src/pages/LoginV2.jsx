@@ -102,20 +102,12 @@ export default function LoginV2() {
       <div className="w-full max-w-md">
         {/* Logo e Header */}
         <div className="text-center mb-12">
-          <div className="flex justify-center mb-8">
-            <div className="relative">
-              {/* Fundo decorativo com gradiente */}
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-3xl blur-xl w-40 h-40 mx-auto"></div>
-
-              {/* Container do logo */}
-              <div className="relative flex items-center justify-center">
-                <img
-                  src="/BarStockLogoSemLetras.png"
-                  alt="Bar Stock"
-                  className="w-32 h-32 object-contain drop-shadow-2xl"
-                />
-              </div>
-            </div>
+          <div className="flex justify-center mb-10">
+            <img
+              src="/BarStockLogoSemLetras.png"
+              alt="Bar Stock"
+              className="w-48 h-48 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300"
+            />
           </div>
 
           <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
