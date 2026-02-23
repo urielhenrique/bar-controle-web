@@ -336,7 +336,7 @@ export default function LoginV2() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-slate-400 space-y-4">
-          <p>Primeiros passos no Bar Stock SaaS?</p>
+          <p>Primeiros passos no Bar Stock?</p>
           <p className="mt-2">
             Teste com:{" "}
             <strong className="text-slate-300">admin@barstock.com.br</strong>
@@ -363,6 +363,17 @@ export default function LoginV2() {
             >
               Contato
             </a>
+          </div>
+
+          {/* Copyright */}
+          <div className="mt-6 pt-4 border-t border-slate-700">
+            <p className="text-xs text-slate-500">
+              Criado e desenvolvido por{" "}
+              <span className="font-semibold text-slate-400">RP Holding</span>
+            </p>
+            <p className="text-xs text-slate-600 mt-1">
+              Marca registrada © 2026
+            </p>
           </div>
         </div>
       </div>
