@@ -72,7 +72,7 @@ export default function Dashboard() {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const saidasRecentes = movimentacoes.filter(
-      (m) => m.tipo === "Saída" && new Date(m.data) >= thirtyDaysAgo,
+      (m) => m.tipo === "Saida" && new Date(m.data) >= thirtyDaysAgo,
     );
 
     const vendasPorProduto = {};
@@ -135,7 +135,7 @@ export default function Dashboard() {
 
     // 💰 RECEITA REAL: Soma dos valores das vendas (saídas) realizadas
     const receitaRealVendas = movimentacoes
-      .filter((m) => m.tipo === "Saída")
+      .filter((m) => m.tipo === "Saida")
       .reduce((sum, m) => sum + (m.valorTotal || 0), 0);
 
     const margemEstimada =

@@ -4,7 +4,7 @@ export interface MovimentacaoEstoque {
   id: string;
   produtoId: string;
   produtoNome: string;
-  tipo: "Entrada" | "Saída";
+  tipo: "Entrada" | "Saida";
   quantidade: number;
   data: string;
   observacao?: string;
@@ -15,7 +15,7 @@ export interface MovimentacaoEstoque {
 
 export interface CreateMovimentacaoDTO {
   produtoId: string;
-  tipo: "Entrada" | "Saída";
+  tipo: "Entrada" | "Saida";
   quantidade: number;
   observacao?: string;
   estabelecimentoId: string;

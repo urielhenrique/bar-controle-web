@@ -44,7 +44,7 @@ export default function MovimentacaoForm({
   const handleSave = async () => {
     if (quantidade <= 0 || !produto) return;
 
-    if (tipo === "Saída" && quantidade > produto.estoqueAtual) {
+    if (tipo === "Saida" && quantidade > produto.estoqueAtual) {
       alert(
         `Estoque insuficiente! Disponível: ${produto.estoqueAtual} unidades.`,
       );
@@ -114,9 +114,9 @@ export default function MovimentacaoForm({
               </Button>
               <Button
                 type="button"
-                variant={tipo === "Saída" ? "default" : "outline"}
-                className={`h-14 rounded-xl text-base font-medium ${tipo === "Saída" ? "bg-red-500 hover:bg-red-600" : ""}`}
-                onClick={() => setTipo("Saída")}
+                variant={tipo === "Saida" ? "default" : "outline"}
+                className={`h-14 rounded-xl text-base font-medium ${tipo === "Saida" ? "bg-red-500 hover:bg-red-600" : ""}`}
+                onClick={() => setTipo("Saida")}
               >
                 <ArrowUpCircle className="w-5 h-5 mr-2" />
                 Saída
@@ -132,7 +132,7 @@ export default function MovimentacaoForm({
               onChange={(e) => setQuantidade(Number(e.target.value))}
               className="h-12 rounded-xl mt-1 text-lg font-semibold text-center"
             />
-            {tipo === "Saída" && quantidade > (produto.estoqueAtual || 0) && (
+            {tipo === "Saida" && quantidade > (produto.estoqueAtual || 0) && (
               <p className="text-red-500 text-sm mt-1">Estoque insuficiente!</p>
             )}
           </div>
