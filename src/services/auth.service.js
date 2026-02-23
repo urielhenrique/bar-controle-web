@@ -3,18 +3,14 @@ import apiClient from "@/api/api";
 class AuthService {
   /**
    * Login com email e senha
+   * Tokens são armazenados automaticamente em httpOnly cookies pelo backend
    */
   async login(email, password) {
     const response = await apiClient.post("/auth/login", { email, password });
 
-    if (response.token) {
-      localStorage.setItem("auth_token", response.token);
-      if (response.refreshToken) {
-        localStorage.setItem("refresh_token", response.refreshToken);
-      }
-      if (response.user) {
-        localStorage.setItem("user", JSON.stringify(response.user));
-      }
+    // Armazenar apenas dados do usuário (não tokens)
+    if (response.user) {
+      localStorage.setItem("user", JSON.stringify(response.user));
     }
 
     return response;
@@ -22,18 +18,14 @@ class AuthService {
 
   /**
    * Login com Google OAuth
+   * Tokens são armazenados automaticamente em httpOnly cookies pelo backend
    */
   async loginWithGoogle(credential) {
     const response = await apiClient.post("/auth/google", { credential });
 
-    if (response.token) {
-      localStorage.setItem("auth_token", response.token);
-      if (response.refreshToken) {
-        localStorage.setItem("refresh_token", response.refreshToken);
-      }
-      if (response.user) {
-        localStorage.setItem("user", JSON.stringify(response.user));
-      }
+    // Armazenar apenas dados do usuário (não tokens)
+    if (response.user) {
+      localStorage.setItem("user", JSON.stringify(response.user));
     }
 
     return response;
@@ -41,6 +33,7 @@ class AuthService {
 
   /**
    * Registro de novo usuário
+   * Tokens são armazenados automaticamente em httpOnly cookies pelo backend
    */
   async register(nomeEstabelecimento, nome, email, senha) {
     const response = await apiClient.post("/auth/register", {
@@ -50,14 +43,9 @@ class AuthService {
       senha,
     });
 
-    if (response.token) {
-      localStorage.setItem("auth_token", response.token);
-      if (response.refreshToken) {
-        localStorage.setItem("refresh_token", response.refreshToken);
-      }
-      if (response.user) {
-        localStorage.setItem("user", JSON.stringify(response.user));
-      }
+    // Armazenar apenas dados do usuário (não tokens)
+    if (response.user) {
+      localStorage.setItem("user", JSON.stringify(response.user));
     }
 
     return response;
@@ -72,25 +60,24 @@ class AuthService {
       localStorage.setItem("user", JSON.stringify(response));
       return response;
     } catch (error) {
-      this.logout();
+      await this.logout();
       throw error;
     }
   }
 
   /**
    * Logout
+   * Chama o endpoint do backend que limpa os cookies
    */
-  logout() {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
-  }
-
-  /**
-   * Obter token armazenado
-   */
-  getToken() {
-    return localStorage.getItem("auth_token");
+  async logout() {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch (error) {
+      console.error("Erro ao fazer logout no servidor:", error);
+    } finally {
+      // Limpar dados locais
+      localStorage.removeItem("user");
+    }
   }
 
   /**
@@ -103,9 +90,11 @@ class AuthService {
 
   /**
    * Verificar se está autenticado
+   * Checa se existe usuário armazenado localmente
+   * A validação real do token acontece no servidor via cookies
    */
   isAuthenticated() {
-    return !!this.getToken();
+    return !!this.getStoredUser();
   }
 }
 

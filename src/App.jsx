@@ -14,6 +14,8 @@ import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import Login from "@/pages/Login";
 import LoginV2 from "@/pages/LoginV2";
 import AdminDashboard from "@/pages/AdminDashboard";
+import apiClient from "@/api/api";
+import { useEffect } from "react";
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -101,6 +103,11 @@ const AppRoutes = () => {
 };
 
 function App() {
+  // Buscar CSRF token no carregamento da aplicação
+  useEffect(() => {
+    apiClient.fetchCsrfToken();
+  }, []);
+
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>

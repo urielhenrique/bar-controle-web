@@ -36,6 +36,7 @@ const transformKeysDeep = (
 
 class ApiClient {
   private client: AxiosInstance;
+  private csrfToken: string | null = null;
 
   constructor() {
     this.client = axios.create({
@@ -43,15 +44,22 @@ class ApiClient {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true, // IMPORTANTE: Permite envio de cookies
     });
 
-    // Interceptor para adicionar token automaticamente
+    // Interceptor de REQUEST: adiciona CSRF token e transforma dados
     this.client.interceptors.request.use((config) => {
-      const token = localStorage.getItem("auth_token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      // Adiciona CSRF token para métodos que modificam dados
+      if (
+        this.csrfToken &&
+        ["post", "put", "delete", "patch"].includes(
+          config.method?.toLowerCase() || "",
+        )
+      ) {
+        config.headers["X-CSRF-Token"] = this.csrfToken;
       }
 
+      // Transforma params para snake_case
       if (config.params) {
         const params = transformKeysDeep(config.params, toSnakeCase) as Record<
           string,
@@ -69,6 +77,7 @@ class ApiClient {
         config.params = params;
       }
 
+      // Transforma body para snake_case
       const data = config.data;
       if (data && typeof data === "object") {
         if (data instanceof FormData || data instanceof Blob) {
@@ -80,7 +89,7 @@ class ApiClient {
       return config;
     });
 
-    // Interceptor para lidar com erros de autenticação
+    // Interceptor de RESPONSE: transforma dados e lida com erros
     this.client.interceptors.response.use(
       (response) => {
         if (response?.data) {
@@ -90,12 +99,28 @@ class ApiClient {
       },
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("user");
+          // Token inválido ou expirado - redirecionar para login
+          // Não precisa limpar localStorage pois não usamos mais
+          window.location.href = "/login";
         }
         return Promise.reject(error);
       },
     );
+  }
+
+  /**
+   * Buscar e armazenar CSRF token
+   * Deve ser chamado no carregamento da aplicação
+   */
+  async fetchCsrfToken(): Promise<void> {
+    try {
+      const response = await this.client.get<{ csrfToken: string }>(
+        "/auth/csrf-token",
+      );
+      this.csrfToken = response.data.csrfToken;
+    } catch (error) {
+      console.error("Erro ao buscar CSRF token:", error);
+    }
   }
 
   /**
@@ -160,27 +185,6 @@ class ApiClient {
       return new Error("Erro ao conectar com o servidor");
     }
     return new Error(error.message);
-  }
-
-  /**
-   * Salvar token de autenticação
-   */
-  setToken(token: string): void {
-    localStorage.setItem("auth_token", token);
-  }
-
-  /**
-   * Obter token armazenado
-   */
-  getToken(): string | null {
-    return localStorage.getItem("auth_token");
-  }
-
-  /**
-   * Limpar token
-   */
-  clearToken(): void {
-    localStorage.removeItem("auth_token");
   }
 }
 
