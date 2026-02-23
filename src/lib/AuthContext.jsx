@@ -17,9 +17,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setAuthError(null);
 
-      // Check if user is authenticated
-      const token = authService.getToken();
-      if (token) {
+      // Check if user is authenticated by checking stored user
+      const storedUser = authService.getStoredUser();
+      if (storedUser) {
+        // Verify with backend (validação real via cookies)
         await checkUserAuth();
       } else {
         setIsLoadingAuth(false);
@@ -96,8 +97,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = (shouldRedirect = true) => {
-    authService.logout();
+  const logout = async (shouldRedirect = true) => {
+    await authService.logout();
     setUser(null);
     setIsAuthenticated(false);
 
