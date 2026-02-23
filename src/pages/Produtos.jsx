@@ -235,6 +235,11 @@ export default function Produtos() {
                       variant="ghost"
                       className="h-9 w-9 rounded-xl text-emerald-600 hover:bg-emerald-50"
                       onClick={() => {
+                        console.log("🖱️ Clicou para movimentar:", {
+                          id: p.id,
+                          nome: p.nome,
+                          estoque: p.estoqueAtual,
+                        });
                         setMovProduto(p);
                         setMovOpen(true);
                       }}

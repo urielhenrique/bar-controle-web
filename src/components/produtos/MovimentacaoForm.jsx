@@ -27,6 +27,20 @@ export default function MovimentacaoForm({
   const [observacao, setObservacao] = useState("");
   const [saving, setSaving] = useState(false);
 
+  // ✅ Reset form quando o modal abre/fecha ou o produto muda
+  React.useEffect(() => {
+    if (open && produto) {
+      console.log("🎯 Modal aberto com produto:", {
+        id: produto.id,
+        nome: produto.nome,
+        estoque: produto.estoqueAtual,
+      });
+      setTipo("Entrada");
+      setQuantidade(1);
+      setObservacao("");
+    }
+  }, [open, produto]);
+
   const handleSave = async () => {
     if (quantidade <= 0 || !produto) return;
 
@@ -36,6 +50,14 @@ export default function MovimentacaoForm({
       );
       return;
     }
+
+    console.log("🔄 Enviando movimentação:", {
+      produtoId: produto.id,
+      produtoNome: produto.nome,
+      tipo,
+      quantidade,
+      observacao,
+    });
 
     setSaving(true);
 
