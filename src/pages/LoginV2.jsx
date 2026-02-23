@@ -92,19 +92,31 @@ export default function LoginV2() {
       <div className="w-full max-w-md">
         {/* Logo e Header */}
         <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl border border-blue-400/50">
-              <span className="text-4xl font-bold text-white">
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              {/* Fundo decorativo com gradiente */}
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-3xl blur-xl w-40 h-40 mx-auto"></div>
+
+              {/* Container do logo */}
+              <div className="relative flex items-center justify-center">
                 <img
-                  src="/BarStockLogo.png"
-                  alt="Bar Stock Logo"
-                  className="w-12 h-12"
+                  src="/BarStock.png"
+                  alt="Bar Stock"
+                  className="w-32 h-32 object-contain drop-shadow-2xl"
                 />
-              </span>
+              </div>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Bar Stock SaaS</h1>
-          <p className="text-slate-400">Gerencie seu estoque com facilidade</p>
+
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            BarStock
+          </h1>
+          <p className="text-lg text-slate-300">
+            Controle de Estoque Inteligente
+          </p>
+          <p className="text-sm text-slate-500 mt-2">
+            Gerencie seu inventário com facilidade
+          </p>
         </div>
 
         {/* Tabs */}
