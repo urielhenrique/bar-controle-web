@@ -6,11 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, AlertCircle, Mail, Lock, LogIn } from "lucide-react";
+import {
+  Loader2,
+  AlertCircle,
+  Mail,
+  Lock,
+  LogIn,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
 export default function LoginV2() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordSignup, setShowPasswordSignup] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tab, setTab] = useState("login"); // login ou signup
@@ -100,7 +110,7 @@ export default function LoginV2() {
               {/* Container do logo */}
               <div className="relative flex items-center justify-center">
                 <img
-                  src="/BarStockLogo.png"
+                  src="/BarStockLogoSemLetras.png"
                   alt="Bar Stock"
                   className="w-32 h-32 object-contain drop-shadow-2xl"
                 />
@@ -161,13 +171,13 @@ export default function LoginV2() {
             <div>
               <Label className="text-slate-200 mb-2 block">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
                   type="email"
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-blue-500"
+                  className="pl-10 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400 focus:ring-blue-400"
                   disabled={isLoading}
                 />
               </div>
@@ -176,15 +186,27 @@ export default function LoginV2() {
             <div>
               <Label className="text-slate-200 mb-2 block">Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-blue-500"
+                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400 focus:ring-blue-400"
                   disabled={isLoading}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+                  tabIndex="-1"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -243,7 +265,7 @@ export default function LoginV2() {
                 placeholder="Seu Bar"
                 value={nomeEstabelecimento}
                 onChange={(e) => setNomeEstabelecimento(e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500"
+                className="bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
                 disabled={isLoading}
               />
             </div>
@@ -255,7 +277,7 @@ export default function LoginV2() {
                 placeholder="João Silva"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className="bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500"
+                className="bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
                 disabled={isLoading}
               />
             </div>
@@ -263,13 +285,13 @@ export default function LoginV2() {
             <div>
               <Label className="text-slate-200 mb-2 block">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
                   type="email"
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500"
+                  className="pl-10 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
                   disabled={isLoading}
                 />
               </div>
@@ -278,15 +300,27 @@ export default function LoginV2() {
             <div>
               <Label className="text-slate-200 mb-2 block">Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
-                  type="password"
+                  type={showPasswordSignup ? "text" : "password"}
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500"
+                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400"
                   disabled={isLoading}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordSignup(!showPasswordSignup)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+                  tabIndex="-1"
+                >
+                  {showPasswordSignup ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
               <p className="text-xs text-slate-400 mt-1">Mínimo 6 caracteres</p>
             </div>
