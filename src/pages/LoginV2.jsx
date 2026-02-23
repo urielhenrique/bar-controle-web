@@ -104,7 +104,7 @@ export default function LoginV2() {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-10">
             <img
-              src="/BarStockLogoSemLetras.png"
+              src="/barstock_logo_transparent.png"
               alt="Bar Stock"
               className="w-48 h-48 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300"
             />
@@ -169,7 +169,7 @@ export default function LoginV2() {
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400 focus:ring-blue-400"
+                  className="pl-10 bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                   disabled={isLoading}
                 />
               </div>
@@ -184,7 +184,7 @@ export default function LoginV2() {
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-100 placeholder-slate-400 focus:border-blue-400 focus:ring-blue-400"
+                  className="pl-10 pr-12 bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                   disabled={isLoading}
                 />
                 <button
