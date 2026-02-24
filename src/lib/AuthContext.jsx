@@ -10,7 +10,14 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
-    checkAppState();
+    // Only check auth state on mount if we have a stored user
+    // This prevents infinite loops on login page
+    const storedUser = authService.getStoredUser();
+    if (storedUser) {
+      checkUserAuth();
+    } else {
+      setIsLoadingAuth(false);
+    }
   }, []);
 
   const isRateLimitError = (error) =>
@@ -18,29 +25,6 @@ export const AuthProvider = ({ children }) => {
     String(error?.message || "")
       .toLowerCase()
       .includes("muitas requisicoes");
-
-  const checkAppState = async () => {
-    try {
-      setAuthError(null);
-
-      // Check if user is authenticated by checking stored user
-      const storedUser = authService.getStoredUser();
-      if (storedUser) {
-        // Verify with backend (validação real via cookies)
-        await checkUserAuth();
-      } else {
-        setIsLoadingAuth(false);
-        setIsAuthenticated(false);
-      }
-    } catch (error) {
-      console.error("Unexpected error checking app state:", error);
-      setAuthError({
-        type: "unknown",
-        message: error.message || "Erro ao inicializar aplicação",
-      });
-      setIsLoadingAuth(false);
-    }
-  };
 
   const checkUserAuth = async () => {
     try {

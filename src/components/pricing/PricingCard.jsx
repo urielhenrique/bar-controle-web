@@ -16,7 +16,8 @@ export default function PricingCard({
         border: `2px solid ${isHighlighted ? "#4f46e5" : "#e2e8f0"}`,
         borderRadius: "12px",
         padding: "32px",
-        boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+        boxShadow:
+          "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
         position: "relative",
         transform: isHighlighted ? "scale(1.05)" : "scale(1)",
         transition: "all 200ms ease-in-out",
