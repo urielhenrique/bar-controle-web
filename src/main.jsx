@@ -6,13 +6,8 @@ import "@/index.css";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-const root = document.getElementById("root");
-const app = GOOGLE_CLIENT_ID ? (
+ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <App />
-  </GoogleOAuthProvider>
-) : (
-  <App />
+  </GoogleOAuthProvider>,
 );
-
-ReactDOM.createRoot(root).render(app);
