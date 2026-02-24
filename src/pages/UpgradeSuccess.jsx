@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -7,7 +7,6 @@ import { useAuth } from "@/lib/AuthContext";
 
 export default function UpgradeSuccess() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { checkAppState } = useAuth();
   const [countdown, setCountdown] = useState(5);
 

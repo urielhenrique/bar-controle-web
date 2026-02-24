@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { useAuth } from "@/lib/AuthContext";
+import { usePlan } from "@/lib/PlanContext";
 import {
   LayoutDashboard,
   Package,
@@ -11,6 +12,8 @@ import {
   X,
   Beer,
   LogOut,
+  Crown,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +27,7 @@ const NAV_ITEMS = [
 export default function Layout({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout, user } = useAuth();
+  const { plan } = usePlan();
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -94,6 +98,20 @@ export default function Layout({ children, currentPageName }) {
                 <LogOut className="w-5 h-5" />
                 Sair
               </button>
+              <Link
+                to={createPageUrl("PlanStatus")}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-blue-50 hover:text-blue-700"
+              >
+                <Settings className="w-5 h-5" />
+                {plan === "PRO" ? (
+                  <>
+                    <Crown className="w-4 h-4" /> Meu Plano PRO
+                  </>
+                ) : (
+                  "Meu Plano (Free)"
+                )}
+              </Link>
             </nav>
           </div>
         </div>
@@ -155,6 +173,18 @@ export default function Layout({ children, currentPageName }) {
               <LogOut className="w-5 h-5" />
               Sair
             </button>
+            <Link
+              to={createPageUrl("PlanStatus")}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all w-full",
+                plan === "PRO"
+                  ? "bg-blue-50 text-blue-700 shadow-sm"
+                  : "text-gray-500 hover:bg-blue-50 hover:text-blue-700",
+              )}
+            >
+              <Crown className="w-5 h-5" />
+              <span>{plan === "PRO" ? "PRO" : "Free"}</span>
+            </Link>
             <div className="px-3 py-2 bg-gray-50 rounded-xl">
               <p className="text-xs text-gray-400 text-center">BarStock v1.0</p>
             </div>

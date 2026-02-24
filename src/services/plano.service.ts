@@ -87,6 +87,28 @@ class PlanoService {
       throw new Error("Não foi possível obter o status do plano");
     }
   }
+
+  /**
+   * Obter informações de uso dos recursos
+   */
+  async getUsage() {
+    try {
+      const response = await apiClient.get("/plano/uso");
+
+      // Mapear resposta para o formato esperado
+      return {
+        produtosCriados: response.produtosCriados || 0,
+        limiteProdutos: response.limiteProdutos || 50,
+        usuariosCriados: response.usuariosCriados || 0,
+        limiteUsuarios: response.limiteUsuarios || 1,
+        movimentacoesMes: response.movimentacoesMes || 0,
+        limiteMovimentacaoMensal: response.limiteMovimentacaoMensal || 100,
+      };
+    } catch (error) {
+      console.error("Erro ao obter uso de recursos:", error);
+      throw error;
+    }
+  }
 }
 
 export default new PlanoService();

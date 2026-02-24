@@ -51,6 +51,7 @@ import Dashboard from "./pages/Dashboard";
 import Produtos from "./pages/Produtos";
 import Fornecedores from "./pages/Fornecedores";
 import Movimentacoes from "./pages/Movimentacoes";
+import PlanStatus from "./pages/PlanStatus";
 import __Layout from "./Layout.jsx";
 
 export const PAGES = {
@@ -58,6 +59,7 @@ export const PAGES = {
   Produtos: Produtos,
   Fornecedores: Fornecedores,
   Movimentacoes: Movimentacoes,
+  PlanStatus: PlanStatus,
 };
 
 export const pagesConfig = {

@@ -67,6 +67,19 @@ class BillingService {
       throw new Error("Erro ao abrir portal de gerenciamento");
     }
   }
+
+  /**
+   * Enviar relatório de uso por email
+   */
+  async sendUsageReport() {
+    try {
+      const response = await apiClient.post("/billing/report");
+      return response;
+    } catch (error) {
+      console.error("Erro ao enviar relatório:", error);
+      throw error;
+    }
+  }
 }
 
 export default new BillingService();

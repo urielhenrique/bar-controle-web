@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { usePlan } from "@/lib/PlanContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +14,6 @@ import { Check, Loader2, Crown, Zap } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function Upgrade() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { plan, upgradeToProPlan, loading } = usePlan();
   const [upgrading, setUpgrading] = useState(false);
