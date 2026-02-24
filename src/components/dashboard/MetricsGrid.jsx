@@ -4,8 +4,8 @@ export default function MetricsGrid({ children }) {
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-        gap: "var(--spacing-lg)",
-        marginBottom: "var(--spacing-xl)",
+        gap: "16px",
+        marginBottom: "32px",
       }}
     >
       {children}

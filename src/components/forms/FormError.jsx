@@ -4,10 +4,10 @@ export default function FormError({ message }) {
   return (
     <p
       style={{
-        fontSize: "var(--font-size-sm)",
-        color: "var(--color-error)",
-        marginTop: "var(--spacing-xs)",
-        fontWeight: "var(--font-weight-medium)",
+        fontSize: "14px",
+        color: "#ef4444",
+        marginTop: "4px",
+        fontWeight: "500",
       }}
     >
       {message}

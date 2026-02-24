@@ -12,14 +12,16 @@ export default function PricingCard({
   return (
     <div
       style={{
-        background: "var(--color-bg-primary)",
-        border: `2px solid ${isHighlighted ? "var(--color-accent-primary)" : "var(--color-border)"}`,
-        borderRadius: "var(--radius-lg)",
-        padding: "var(--spacing-xl)",
-        boxShadow: isHighlighted ? "var(--shadow-lg)" : "var(--shadow-sm)",
+        background: "#ffffff",
+        border: `2px solid ${isHighlighted ? "#10b981" : "#e5e7eb"}`,
+        borderRadius: "12px",
+        padding: "32px",
+        boxShadow: isHighlighted 
+          ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" 
+          : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
         position: "relative",
         transform: isHighlighted ? "scale(1.05)" : "scale(1)",
-        transition: "all var(--transition-normal)",
+        transition: "all 200ms ease-in-out",
         display: "flex",
         flexDirection: "column",
       }}
@@ -30,12 +32,12 @@ export default function PricingCard({
             position: "absolute",
             top: "-12px",
             left: "20px",
-            background: "var(--color-accent-primary)",
+            background: "#10b981",
             color: "white",
             padding: "4px 12px",
-            borderRadius: "var(--radius-md)",
-            fontSize: "var(--font-size-xs)",
-            fontWeight: "var(--font-weight-bold)",
+            borderRadius: "8px",
+            fontSize: "12px",
+            fontWeight: "700",
             textTransform: "uppercase",
           }}
         >
@@ -45,10 +47,10 @@ export default function PricingCard({
 
       <h3
         style={{
-          fontSize: "var(--font-size-xl)",
-          fontWeight: "var(--font-weight-bold)",
-          marginBottom: "var(--spacing-sm)",
-          color: "var(--color-text-primary)",
+          fontSize: "20px",
+          fontWeight: "700",
+          marginBottom: "8px",
+          color: "#1f2937",
         }}
       >
         {title}
@@ -56,20 +58,20 @@ export default function PricingCard({
 
       <p
         style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--color-text-secondary)",
-          marginBottom: "var(--spacing-lg)",
+          fontSize: "14px",
+          color: "#6b7280",
+          marginBottom: "24px",
         }}
       >
         {description}
       </p>
 
-      <div style={{ marginBottom: "var(--spacing-lg)" }}>
+      <div style={{ marginBottom: "24px" }}>
         <span
           style={{
-            fontSize: "var(--font-size-3xl)",
-            fontWeight: "var(--font-weight-bold)",
-            color: "var(--color-text-primary)",
+            fontSize: "32px",
+            fontWeight: "700",
+            color: "#1f2937",
           }}
         >
           {price}
@@ -77,9 +79,9 @@ export default function PricingCard({
         {price !== "Grátis" && (
           <span
             style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--color-text-secondary)",
-              marginLeft: "var(--spacing-sm)",
+              fontSize: "14px",
+              color: "#6b7280",
+              marginLeft: "8px",
             }}
           >
             / mês
@@ -90,18 +92,26 @@ export default function PricingCard({
       <button
         onClick={onUpgrade}
         style={{
-          background: isHighlighted
-            ? "var(--color-accent-primary)"
-            : "var(--color-border)",
-          color: isHighlighted ? "white" : "var(--color-text-primary)",
-          padding: "var(--spacing-md) var(--spacing-lg)",
+          background: isHighlighted ? "#10b981" : "#e5e7eb",
+          color: isHighlighted ? "white" : "#1f2937",
+          padding: "16px 24px",
           border: "none",
-          borderRadius: "var(--radius-md)",
-          fontWeight: "var(--font-weight-semibold)",
+          borderRadius: "8px",
+          fontWeight: "600",
           cursor: "pointer",
           width: "100%",
-          marginBottom: "var(--spacing-lg)",
-          transition: "all var(--transition-fast)",
+          marginBottom: "24px",
+          transition: "all 150ms ease-in-out",
+        }}
+        onMouseEnter={(e) => {
+          if (isHighlighted) {
+            e.target.style.background = "#059669";
+          } else {
+            e.target.style.background = "#d1d5db";
+          }
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = isHighlighted ? "#10b981" : "#e5e7eb";
         }}
       >
         {buttonText}
@@ -110,16 +120,16 @@ export default function PricingCard({
       <div
         style={{
           flex: 1,
-          borderTop: `1px solid var(--color-border)`,
-          paddingTop: "var(--spacing-lg)",
+          borderTop: "1px solid #e5e7eb",
+          paddingTop: "24px",
         }}
       >
         <p
           style={{
-            fontSize: "var(--font-size-sm)",
-            fontWeight: "var(--font-weight-semibold)",
-            color: "var(--color-text-primary)",
-            marginBottom: "var(--spacing-md)",
+            fontSize: "14px",
+            fontWeight: "600",
+            color: "#1f2937",
+            marginBottom: "16px",
           }}
         >
           Incluso:
@@ -131,13 +141,13 @@ export default function PricingCard({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "var(--spacing-sm)",
-                marginBottom: "var(--spacing-sm)",
-                fontSize: "var(--font-size-sm)",
-                color: "var(--color-text-secondary)",
+                gap: "8px",
+                marginBottom: "8px",
+                fontSize: "14px",
+                color: "#6b7280",
               }}
             >
-              <Check size={16} color="var(--color-accent-primary)" />
+              <Check size={16} color="#10b981" />
               {feature}
             </li>
           ))}

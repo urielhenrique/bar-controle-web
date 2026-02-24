@@ -10,15 +10,20 @@ export default function DashboardCard({
     <div
       onClick={onClick}
       style={{
-        background: "var(--color-bg-primary)",
-        border: `1px solid var(--color-border)`,
-        borderRadius: "var(--radius-md)",
-        padding: "var(--spacing-lg)",
+        background: "#ffffff",
+        border: "1px solid #e5e7eb",
+        borderRadius: "8px",
+        padding: "24px",
         cursor: onClick ? "pointer" : "default",
-        transition: "all var(--transition-normal)",
-        boxShadow: "var(--shadow-xs)",
+        transition: "all 200ms ease-in-out",
+        boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
       }}
-      className="hover:shadow-md"
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
+      }}
     >
       <div
         style={{
@@ -30,20 +35,20 @@ export default function DashboardCard({
         <div>
           <p
             style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--color-text-secondary)",
-              marginBottom: "var(--spacing-sm)",
-              fontWeight: "var(--font-weight-medium)",
+              fontSize: "14px",
+              color: "#6b7280",
+              marginBottom: "8px",
+              fontWeight: "500",
             }}
           >
             {title}
           </p>
           <p
             style={{
-              fontSize: "var(--font-size-3xl)",
-              fontWeight: "var(--font-weight-bold)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--spacing-xs)",
+              fontSize: "32px",
+              fontWeight: "700",
+              color: "#1f2937",
+              marginBottom: "4px",
             }}
           >
             {value}
@@ -51,8 +56,8 @@ export default function DashboardCard({
           {subtitle && (
             <p
               style={{
-                fontSize: "var(--font-size-xs)",
-                color: "var(--color-text-muted)",
+                fontSize: "12px",
+                color: "#9ca3af",
               }}
             >
               {subtitle}
@@ -64,12 +69,12 @@ export default function DashboardCard({
             style={{
               width: "40px",
               height: "40px",
-              background: "var(--color-accent-light)",
-              borderRadius: "var(--radius-md)",
+              background: "#ecfdf5",
+              borderRadius: "8px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "var(--color-accent-primary)",
+              color: "#10b981",
             }}
           >
             <Icon size={20} />

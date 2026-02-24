@@ -24,30 +24,28 @@ export default function Upgrade() {
     <div
       style={{
         minHeight: "100vh",
-        background: "var(--color-bg-secondary)",
-        padding: "var(--spacing-xl)",
-        paddingTop: "var(--spacing-3xl)",
+        background: "#f9fafb",
+        padding: "32px",
+        paddingTop: "64px",
       }}
     >
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         {/* Header */}
-        <div
-          style={{ textAlign: "center", marginBottom: "var(--spacing-3xl)" }}
-        >
+        <div style={{ textAlign: "center", marginBottom: "64px" }}>
           <h1
             style={{
-              fontSize: "var(--font-size-3xl)",
-              fontWeight: "var(--font-weight-bold)",
-              color: "var(--color-text-primary)",
-              marginBottom: "var(--spacing-md)",
+              fontSize: "32px",
+              fontWeight: "700",
+              color: "#1f2937",
+              marginBottom: "16px",
             }}
           >
             Escolha seu Plano
           </h1>
           <p
             style={{
-              fontSize: "var(--font-size-lg)",
-              color: "var(--color-text-secondary)",
+              fontSize: "18px",
+              color: "#6b7280",
             }}
           >
             Escale seu negócio com recursos ilimitados
@@ -59,8 +57,8 @@ export default function Upgrade() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "var(--spacing-xl)",
-            marginBottom: "var(--spacing-xl)",
+            gap: "32px",
+            marginBottom: "32px",
           }}
         >
           <PricingCard
@@ -105,11 +103,11 @@ export default function Upgrade() {
         <div
           style={{
             textAlign: "center",
-            paddingTop: "var(--spacing-lg)",
-            borderTop: `1px solid var(--color-border)`,
+            paddingTop: "16px",
+            borderTop: "1px solid #e5e7eb",
             display: "flex",
             justifyContent: "center",
-            gap: "var(--spacing-xl)",
+            gap: "32px",
             flexWrap: "wrap",
           }}
         >
@@ -117,13 +115,13 @@ export default function Upgrade() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--spacing-sm)",
+              gap: "8px",
             }}
           >
             <span
               style={{
-                fontSize: "var(--font-size-sm)",
-                color: "var(--color-text-secondary)",
+                fontSize: "14px",
+                color: "#6b7280",
               }}
             >
               🔒 Pagamento Seguro via Stripe
@@ -133,13 +131,13 @@ export default function Upgrade() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--spacing-sm)",
+              gap: "8px",
             }}
           >
             <span
               style={{
-                fontSize: "var(--font-size-sm)",
-                color: "var(--color-text-secondary)",
+                fontSize: "14px",
+                color: "#6b7280",
               }}
             >
               ✋ Cancele a qualquer momento
