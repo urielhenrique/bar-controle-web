@@ -113,14 +113,26 @@ class ApiClient {
    * Buscar e armazenar CSRF token
    * Deve ser chamado no carregamento da aplicação
    */
+  private async sleep(ms: number): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async fetchCsrfToken(): Promise<void> {
     try {
       const response = await this.client.get<{ csrfToken: string }>(
         "/auth/csrf-token",
       );
       this.csrfToken = response.data.csrfToken;
-    } catch (error) {
+    } catch (error: any) {
+      const handledError = this.handleError(error) as Error & {
+        status?: number;
+      };
+      if (handledError.status === 429) {
+        await this.sleep(800);
+        return this.fetchCsrfToken();
+      }
       console.error("Erro ao buscar CSRF token:", error);
+      throw handledError;
     }
   }
 
@@ -135,6 +147,9 @@ class ApiClient {
       });
     }
     await this.csrfTokenPromise;
+    if (!this.csrfToken) {
+      throw new Error("CSRF token indisponivel. Tente novamente em instantes.");
+    }
   }
 
   /**
