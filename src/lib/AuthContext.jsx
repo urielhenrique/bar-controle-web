@@ -13,6 +13,12 @@ export const AuthProvider = ({ children }) => {
     checkAppState();
   }, []);
 
+  const isRateLimitError = (error) =>
+    error?.status === 429 ||
+    String(error?.message || "")
+      .toLowerCase()
+      .includes("muitas requisicoes");
+
   const checkAppState = async () => {
     try {
       setAuthError(null);
@@ -45,6 +51,19 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(false);
     } catch (error) {
       console.error("Falha ao verificar autenticação:", error);
+      if (isRateLimitError(error)) {
+        const storedUser = authService.getStoredUser();
+        if (storedUser) {
+          setUser(storedUser);
+          setIsAuthenticated(true);
+        }
+        setIsLoadingAuth(false);
+        setAuthError({
+          type: "rate_limited",
+          message: "Servidor ocupado. Tente novamente em instantes.",
+        });
+        return;
+      }
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
       authService.logout();

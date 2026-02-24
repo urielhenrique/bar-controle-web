@@ -22,7 +22,14 @@ export const PlanProvider = ({ children }) => {
       const subInfo = await billingService.getSubscriptionInfo();
       setSubscription(subInfo);
     } catch (error) {
-      console.error("Erro ao carregar subscription:", error);
+      const isRateLimited =
+        error?.status === 429 ||
+        String(error?.message || "")
+          .toLowerCase()
+          .includes("muitas requisicoes");
+      if (!isRateLimited) {
+        console.error("Erro ao carregar subscription:", error);
+      }
     }
   };
 

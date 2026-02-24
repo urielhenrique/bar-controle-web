@@ -37,6 +37,7 @@ const transformKeysDeep = (
 class ApiClient {
   private client: AxiosInstance;
   private csrfToken: string | null = null;
+  private csrfTokenPromise: Promise<void> | null = null;
 
   constructor() {
     this.client = axios.create({
@@ -48,15 +49,15 @@ class ApiClient {
     });
 
     // Interceptor de REQUEST: adiciona CSRF token e transforma dados
-    this.client.interceptors.request.use((config) => {
+    this.client.interceptors.request.use(async (config) => {
+      const method = config.method?.toLowerCase() || "";
+
       // Adiciona CSRF token para métodos que modificam dados
-      if (
-        this.csrfToken &&
-        ["post", "put", "delete", "patch"].includes(
-          config.method?.toLowerCase() || "",
-        )
-      ) {
-        config.headers["X-CSRF-Token"] = this.csrfToken;
+      if (["post", "put", "delete", "patch"].includes(method)) {
+        await this.ensureCsrfToken();
+        if (this.csrfToken) {
+          config.headers["X-CSRF-Token"] = this.csrfToken;
+        }
       }
 
       // Transforma params para snake_case
@@ -124,6 +125,19 @@ class ApiClient {
   }
 
   /**
+   * Garante que o CSRF token esteja carregado antes de requests sensiveis
+   */
+  private async ensureCsrfToken(): Promise<void> {
+    if (this.csrfToken) return;
+    if (!this.csrfTokenPromise) {
+      this.csrfTokenPromise = this.fetchCsrfToken().finally(() => {
+        this.csrfTokenPromise = null;
+      });
+    }
+    await this.csrfTokenPromise;
+  }
+
+  /**
    * Método genérico GET
    */
   async get<T>(url: string, params?: Record<string, any>): Promise<T> {
@@ -178,11 +192,21 @@ class ApiClient {
     if (error.response) {
       // Erro da API
       const message = error.response.data?.message || error.message;
-      return new Error(message);
+      const apiError = new Error(message) as Error & {
+        status?: number;
+        data?: unknown;
+      };
+      apiError.status = error.response.status;
+      apiError.data = error.response.data;
+      return apiError;
     }
     if (error.request) {
       // Erro de conexão
-      return new Error("Erro ao conectar com o servidor");
+      const connectionError = new Error(
+        "Erro ao conectar com o servidor",
+      ) as Error & { status?: number };
+      connectionError.status = 0;
+      return connectionError;
     }
     return new Error(error.message);
   }

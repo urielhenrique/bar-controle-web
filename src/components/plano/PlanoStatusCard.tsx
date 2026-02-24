@@ -1,5 +1,6 @@
 import React from "react";
-import { Zap, AlertCircle, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Zap, AlertCircle, AlertTriangle, ArrowRight } from "lucide-react";
 import { usePlano } from "@/hooks/usePlano";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -191,15 +192,24 @@ export default function PlanoStatusCard() {
         />
       </div>
 
-      {/* Footer - Upgrade Button */}
+      {/* Footer - Upgrade Bar */}
       {isFree && (
-        <div className="p-6 border-t border-gray-100 bg-blue-50">
-          <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
-            <Zap className="w-5 h-5" />
-            Fazer Upgrade para PRO
-          </button>
-          <p className="text-xs text-gray-600 text-center mt-2">
-            Desbloqueie produtos ilimitados, usuários e movimentações
+        <div className="px-6 py-3 border-t border-gray-100 bg-blue-50/70">
+          <Link
+            to="/upgrade"
+            className="group flex items-center justify-between rounded-lg border border-blue-200/70 bg-white/80 px-4 py-2 text-sm text-blue-700 hover:bg-white transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <Zap className="w-4 h-4" />
+              Upgrade para PRO
+            </span>
+            <span className="flex items-center gap-1 text-xs text-blue-600">
+              Ver planos
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+          <p className="text-[11px] text-blue-700/80 mt-2">
+            Desbloqueie produtos ilimitados, usuarios e movimentacoes.
           </p>
         </div>
       )}

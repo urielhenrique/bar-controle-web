@@ -28,6 +28,7 @@ export default function LoginV2() {
   const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
   const navigate = useNavigate();
   const { login, loginWithGoogle, register } = useAuth();
+  const hasGoogleClientId = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -222,27 +223,35 @@ export default function LoginV2() {
             </Button>
 
             {/* Google OAuth Button */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-600"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-slate-800 text-slate-400">
-                  ou continue com
-                </span>
-              </div>
-            </div>
+            {hasGoogleClientId ? (
+              <>
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-600"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-slate-800 text-slate-400">
+                      ou continue com
+                    </span>
+                  </div>
+                </div>
 
-            <div className="w-full flex justify-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={handleGoogleError}
-                theme="filled_black"
-                size="large"
-                text="continue_with"
-                width="384"
-              />
-            </div>
+                <div className="w-full flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="filled_black"
+                    size="large"
+                    text="continue_with"
+                    width="384"
+                  />
+                </div>
+              </>
+            ) : (
+              <p className="text-xs text-slate-400 text-center mt-4">
+                Login com Google indisponivel: configure o client ID.
+              </p>
+            )}
           </form>
         )}
 

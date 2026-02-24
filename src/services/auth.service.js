@@ -1,5 +1,11 @@
 import apiClient from "@/api/api";
 
+const isRateLimitError = (error) =>
+  error?.status === 429 ||
+  String(error?.message || "")
+    .toLowerCase()
+    .includes("muitas requisicoes");
+
 class AuthService {
   /**
    * Login com email e senha
@@ -60,7 +66,9 @@ class AuthService {
       localStorage.setItem("user", JSON.stringify(response));
       return response;
     } catch (error) {
-      await this.logout();
+      if (!isRateLimitError(error)) {
+        await this.logout();
+      }
       throw error;
     }
   }
