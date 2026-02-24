@@ -1,0 +1,148 @@
+/* Design System Tokens */
+
+:root {
+  /* Colors - Neutral Primary */
+  --color-text-primary: #1f2937; /* Dark gray for text */
+  --color-text-secondary: #6b7280; /* Medium gray for secondary text */
+  --color-text-muted: #9ca3af; /* Light gray for muted */
+
+  /* Colors - Background */
+  --color-bg-primary: #ffffff; /* White */
+  --color-bg-secondary: #f9fafb; /* Very light gray */
+  --color-bg-tertiary: #f3f4f6; /* Light gray */
+
+  /* Colors - Accent */
+  --color-accent-primary: #10b981; /* Emerald (growth/success) */
+  --color-accent-light: #ecfdf5; /* Light emerald background */
+  --color-accent-dark: #047857; /* Dark emerald */
+
+  /* Colors - Semantic */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Colors - Border & Divider */
+  --color-border: #e5e7eb; /* Light gray border */
+  --color-border-subtle: #f3f4f6; /* Very subtle border */
+
+  /* Spacing - 8px grid */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Typography */
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+/* Component Base Styles */
+
+.card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal);
+  padding: var(--spacing-md);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.button-primary {
+  background: var(--color-accent-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.button-primary:hover {
+  background: var(--color-accent-dark);
+}
+
+.text-xs {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.text-base {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+.heading-h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin: var(--spacing-md) 0;
+}
+
+.heading-h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin: var(--spacing-md) 0;
+}
+
+.heading-h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin: var(--spacing-md) 0;
+}

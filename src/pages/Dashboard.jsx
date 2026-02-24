@@ -11,9 +11,11 @@ import {
   DollarSign,
   ArrowRight,
   Beer,
+  Building2,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import StatCard from "@/components/shared/StatCard";
+import DashboardCard from "@/components/dashboard/DashboardCard";
+import MetricsGrid from "@/components/dashboard/MetricsGrid";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
 import PlanoSection from "@/components/plano/PlanoSection";
@@ -216,48 +218,44 @@ export default function Dashboard() {
       ) : (
         <>
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <StatCard
-              title="Total de Produtos"
+          <MetricsGrid>
+            <DashboardCard
+              title="Produtos"
               value={stats.total}
+              subtitle={`${stats.repor} em falta`}
               icon={Package}
-              color="blue"
             />
-            <StatCard
-              title="Precisam Repor"
-              value={stats.repor}
-              icon={AlertTriangle}
-              color={stats.repor > 0 ? "red" : "emerald"}
-            />
-            <StatCard
-              title="Mais Vendido"
-              value={stats.maisVendido}
-              icon={TrendingUp}
-              color="violet"
-              subtitle="Últimos 30 dias"
-            />
-            <StatCard
-              title="Valor Investido"
-              value={`R$\u00A0${stats.valorInvestido.toFixed(2)}`}
+            <DashboardCard
+              title="Valor em Estoque"
+              value={`R$ ${stats.valorEstoque.toFixed(2)}`}
+              subtitle="Investimento total"
               icon={DollarSign}
-              color="amber"
-              subtitle="Custo total"
             />
-            <StatCard
+            <DashboardCard
+              title="Fornecedores"
+              value={fornecedores.length}
+              subtitle={`${fornecedores.length} ativo${fornecedores.length !== 1 ? "s" : ""}`}
+              icon={Building2}
+            />
+            <DashboardCard
               title="Receita de Vendas"
-              value={`R$\u00A0${stats.receitaRealVendas.toFixed(2)}`}
+              value={`R$ ${stats.receitaRealVendas.toFixed(2)}`}
+              subtitle="Total vendido"
               icon={TrendingUp}
-              color="emerald"
-              subtitle="Total em caixa"
             />
-            <StatCard
+            <DashboardCard
               title="Margem Estimada"
               value={`${stats.margemEstimada.toFixed(1)}%`}
-              icon={Package}
-              color="violet"
-              subtitle="Lucro potencial"
+              subtitle="Potencial de ganho"
+              icon={TrendingUp}
             />
-          </div>
+            <DashboardCard
+              title="Mais Vendido"
+              value={stats.maisVendido}
+              subtitle="Últimos 30 dias"
+              icon={Package}
+            />
+          </MetricsGrid>
 
           {/* Alertas de Reposição */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
