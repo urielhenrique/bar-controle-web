@@ -59,7 +59,7 @@ export default function PlanLimitModal({ open, onClose, message }) {
             </li>
           </ul>
           <p className="text-center mt-4 text-xl font-bold text-white">
-            Apenas R$ 49,90/mês
+            Apenas R$ 29,90/mês
           </p>
         </div>
 

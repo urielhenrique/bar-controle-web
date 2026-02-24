@@ -132,7 +132,7 @@ export default function Upgrade() {
                 Para negócios em crescimento
               </CardDescription>
               <div className="mt-4">
-                <span className="text-4xl font-bold text-white">R$ 49,90</span>
+                <span className="text-4xl font-bold text-white">R$ 29,90</span>
                 <span className="text-slate-400">/mês</span>
               </div>
             </CardHeader>

@@ -120,7 +120,7 @@ export default function PlanStatus() {
                   Custo Mensal
                 </h3>
                 <p className="text-3xl font-bold text-white">
-                  {plan === "PRO" ? "R$ 49,90" : "R$ 0"}
+                  {plan === "PRO" ? "R$ 29,90" : "R$ 0"}
                 </p>
               </div>
 
