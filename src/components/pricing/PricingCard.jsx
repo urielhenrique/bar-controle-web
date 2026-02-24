@@ -13,12 +13,10 @@ export default function PricingCard({
     <div
       style={{
         background: "#ffffff",
-        border: `2px solid ${isHighlighted ? "#10b981" : "#e5e7eb"}`,
+        border: `2px solid ${isHighlighted ? "#4f46e5" : "#e2e8f0"}`,
         borderRadius: "12px",
         padding: "32px",
-        boxShadow: isHighlighted 
-          ? "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" 
-          : "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+        boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
         position: "relative",
         transform: isHighlighted ? "scale(1.05)" : "scale(1)",
         transition: "all 200ms ease-in-out",
@@ -32,13 +30,14 @@ export default function PricingCard({
             position: "absolute",
             top: "-12px",
             left: "20px",
-            background: "#10b981",
+            background: "#4f46e5",
             color: "white",
             padding: "4px 12px",
             borderRadius: "8px",
             fontSize: "12px",
             fontWeight: "700",
             textTransform: "uppercase",
+            letterSpacing: "0.05em",
           }}
         >
           RECOMENDADO
@@ -50,7 +49,7 @@ export default function PricingCard({
           fontSize: "20px",
           fontWeight: "700",
           marginBottom: "8px",
-          color: "#1f2937",
+          color: "#0f172a",
         }}
       >
         {title}
@@ -59,7 +58,7 @@ export default function PricingCard({
       <p
         style={{
           fontSize: "14px",
-          color: "#6b7280",
+          color: "#64748b",
           marginBottom: "24px",
         }}
       >
@@ -71,7 +70,7 @@ export default function PricingCard({
           style={{
             fontSize: "32px",
             fontWeight: "700",
-            color: "#1f2937",
+            color: "#0f172a",
           }}
         >
           {price}
@@ -80,7 +79,7 @@ export default function PricingCard({
           <span
             style={{
               fontSize: "14px",
-              color: "#6b7280",
+              color: "#64748b",
               marginLeft: "8px",
             }}
           >
@@ -92,8 +91,8 @@ export default function PricingCard({
       <button
         onClick={onUpgrade}
         style={{
-          background: isHighlighted ? "#10b981" : "#e5e7eb",
-          color: isHighlighted ? "white" : "#1f2937",
+          background: isHighlighted ? "#4f46e5" : "#e2e8f0",
+          color: isHighlighted ? "white" : "#0f172a",
           padding: "16px 24px",
           border: "none",
           borderRadius: "8px",
@@ -105,13 +104,13 @@ export default function PricingCard({
         }}
         onMouseEnter={(e) => {
           if (isHighlighted) {
-            e.target.style.background = "#059669";
+            e.target.style.background = "#4338ca";
           } else {
-            e.target.style.background = "#d1d5db";
+            e.target.style.background = "#cbd5e1";
           }
         }}
         onMouseLeave={(e) => {
-          e.target.style.background = isHighlighted ? "#10b981" : "#e5e7eb";
+          e.target.style.background = isHighlighted ? "#4f46e5" : "#e2e8f0";
         }}
       >
         {buttonText}
@@ -120,7 +119,7 @@ export default function PricingCard({
       <div
         style={{
           flex: 1,
-          borderTop: "1px solid #e5e7eb",
+          borderTop: "1px solid #e2e8f0",
           paddingTop: "24px",
         }}
       >
@@ -128,7 +127,7 @@ export default function PricingCard({
           style={{
             fontSize: "14px",
             fontWeight: "600",
-            color: "#1f2937",
+            color: "#0f172a",
             marginBottom: "16px",
           }}
         >
@@ -144,10 +143,10 @@ export default function PricingCard({
                 gap: "8px",
                 marginBottom: "8px",
                 fontSize: "14px",
-                color: "#6b7280",
+                color: "#64748b",
               }}
             >
-              <Check size={16} color="#10b981" />
+              <Check size={16} color="#4f46e5" />
               {feature}
             </li>
           ))}

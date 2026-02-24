@@ -1,30 +1,30 @@
 /* Design System Tokens */
 
 :root {
-  /* Colors - Neutral Primary */
-  --color-text-primary: #1f2937; /* Dark gray for text */
-  --color-text-secondary: #6b7280; /* Medium gray for secondary text */
-  --color-text-muted: #9ca3af; /* Light gray for muted */
+  /* Colors - Neutral Primary (Slate Palette) */
+  --color-text-primary: #0f172a; /* Slate 900 - Dark text */
+  --color-text-secondary: #64748b; /* Slate 500 - Secondary text */
+  --color-text-muted: #94a3b8; /* Slate 400 - Muted text */
 
-  /* Colors - Background */
+  /* Colors - Background (Slate Palette) */
   --color-bg-primary: #ffffff; /* White */
-  --color-bg-secondary: #f9fafb; /* Very light gray */
-  --color-bg-tertiary: #f3f4f6; /* Light gray */
+  --color-bg-secondary: #f8fafc; /* Slate 50 - Very light background */
+  --color-bg-tertiary: #f1f5f9; /* Slate 100 - Light background */
 
-  /* Colors - Accent */
-  --color-accent-primary: #10b981; /* Emerald (growth/success) */
-  --color-accent-light: #ecfdf5; /* Light emerald background */
-  --color-accent-dark: #047857; /* Dark emerald */
+  /* Colors - Accent (Indigo - Minimal Professional) */
+  --color-accent-primary: #4f46e5; /* Indigo 600 - Primary accent */
+  --color-accent-light: #eef2ff; /* Indigo 50 - Light accent background */
+  --color-accent-dark: #4338ca; /* Indigo 700 - Dark accent */
 
   /* Colors - Semantic */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  --color-success: #10b981; /* Emerald 500 - Keep for success states */
+  --color-warning: #f59e0b; /* Amber 500 - Keep for warnings */
+  --color-error: #ef4444; /* Red 500 - Keep for errors */
+  --color-info: #3b82f6; /* Blue 500 - Keep for info */
 
-  /* Colors - Border & Divider */
-  --color-border: #e5e7eb; /* Light gray border */
-  --color-border-subtle: #f3f4f6; /* Very subtle border */
+  /* Colors - Border & Divider (Slate Palette) */
+  --color-border: #e2e8f0; /* Slate 200 - Subtle borders */
+  --color-border-subtle: #f1f5f9; /* Slate 100 - Very subtle borders */
 
   /* Spacing - 8px grid */
   --spacing-xs: 4px;
@@ -57,15 +57,10 @@
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
-  /* Shadows */
+  /* Shadows (Minimal - Enterprise Style) */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* Note: Removed shadow-md, shadow-lg, shadow-xl for minimal design */
 
   /* Border Radius */
   --radius-sm: 4px;
@@ -95,7 +90,8 @@
 
 .button-primary {
   background: var(--color-accent-primary);
-  color: white;
+  color: white;sm);
+  border-color: var(--color-accent-primary
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md);
   border: none;

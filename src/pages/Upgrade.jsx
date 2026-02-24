@@ -24,7 +24,7 @@ export default function Upgrade() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f9fafb",
+        background: "#f8fafc",
         padding: "32px",
         paddingTop: "64px",
       }}
@@ -36,8 +36,9 @@ export default function Upgrade() {
             style={{
               fontSize: "32px",
               fontWeight: "700",
-              color: "#1f2937",
+              color: "#0f172a",
               marginBottom: "16px",
+              letterSpacing: "-0.025em",
             }}
           >
             Escolha seu Plano
@@ -45,7 +46,7 @@ export default function Upgrade() {
           <p
             style={{
               fontSize: "18px",
-              color: "#6b7280",
+              color: "#64748b",
             }}
           >
             Escale seu negócio com recursos ilimitados
@@ -99,50 +100,39 @@ export default function Upgrade() {
           />
         </div>
 
-        {/* Trust Badges */}
+        {/* Trust Message */}
         <div
           style={{
             textAlign: "center",
-            paddingTop: "16px",
-            borderTop: "1px solid #e5e7eb",
+            paddingTop: "24px",
+            borderTop: "1px solid #e2e8f0",
             display: "flex",
             justifyContent: "center",
-            gap: "32px",
+            alignItems: "center",
+            gap: "8px",
             flexWrap: "wrap",
+            marginTop: "32px",
           }}
         >
-          <div
+          <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
+              fontSize: "14px",
+              color: "#64748b",
+              fontWeight: "500",
             }}
           >
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#6b7280",
-              }}
-            >
-              🔒 Pagamento Seguro via Stripe
-            </span>
-          </div>
-          <div
+            🔒 Pagamento seguro via Stripe
+          </span>
+          <span style={{ color: "#cbd5e1" }}>•</span>
+          <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
+              fontSize: "14px",
+              color: "#64748b",
+              fontWeight: "500",
             }}
           >
-            <span
-              style={{
-                fontSize: "14px",
-                color: "#6b7280",
-              }}
-            >
-              ✋ Cancele a qualquer momento
-            </span>
-          </div>
+            Cancele quando quiser
+          </span>
         </div>
       </div>
     </div>

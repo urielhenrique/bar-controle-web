@@ -11,7 +11,7 @@ export default function DashboardCard({
       onClick={onClick}
       style={{
         background: "#ffffff",
-        border: "1px solid #e5e7eb",
+        border: "1px solid #e2e8f0",
         borderRadius: "8px",
         padding: "24px",
         cursor: onClick ? "pointer" : "default",
@@ -19,10 +19,13 @@ export default function DashboardCard({
         boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)";
+        e.currentTarget.style.boxShadow =
+          "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)";
+        e.currentTarget.style.borderColor = "#4f46e5";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
+        e.currentTarget.style.borderColor = "#e2e8f0";
       }}
     >
       <div
@@ -35,10 +38,12 @@ export default function DashboardCard({
         <div>
           <p
             style={{
-              fontSize: "14px",
-              color: "#6b7280",
+              fontSize: "12px",
+              color: "#64748b",
               marginBottom: "8px",
               fontWeight: "500",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
             }}
           >
             {title}
@@ -47,8 +52,9 @@ export default function DashboardCard({
             style={{
               fontSize: "32px",
               fontWeight: "700",
-              color: "#1f2937",
+              color: "#0f172a",
               marginBottom: "4px",
+              letterSpacing: "-0.025em",
             }}
           >
             {value}
@@ -57,7 +63,7 @@ export default function DashboardCard({
             <p
               style={{
                 fontSize: "12px",
-                color: "#9ca3af",
+                color: "#94a3b8",
               }}
             >
               {subtitle}
@@ -69,12 +75,12 @@ export default function DashboardCard({
             style={{
               width: "40px",
               height: "40px",
-              background: "#ecfdf5",
+              background: "#eef2ff",
               borderRadius: "8px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#10b981",
+              color: "#4f46e5",
             }}
           >
             <Icon size={20} />
