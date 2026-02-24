@@ -1,5 +1,5 @@
 /**
- * MovimentacaoForm - Formulário de movimentação com validações
+ * MovimentacaoFormV2 - Exemplo de formulário de movimentação com validações
  * Usa: validators, formatters, useFormValidation, FormInput
  */
 
@@ -39,20 +39,17 @@ const TIPOS_MOVIMENTACAO = [
   { value: "ajuste", label: "Ajuste" },
 ];
 
-export default function MovimentacaoForm({
+export default function MovimentacaoFormV2({
   open,
   onClose,
-  produto,
+  produtoId,
+  produtoNome,
   estabelecimentoId,
+  onSuccess,
 }) {
   const [saving, setSaving] = useState(false);
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  // Extrair dados do produto
-  const produtoId = produto?.id;
-  const produtoNome = produto?.nome;
-  const estoqueAtual = produto?.estoqueAtual || 0;
 
   // Configuração de validadores
   const validators = {
@@ -87,7 +84,7 @@ export default function MovimentacaoForm({
       quantidade: "",
       observacao: "",
     },
-    validators,
+    validators
   );
 
   useEffect(() => {
@@ -111,18 +108,21 @@ export default function MovimentacaoForm({
       };
 
       await movimentacaoService.create(data);
-
+      
       setSuccessMessage("Movimentação registrada com sucesso!");
 
       setTimeout(() => {
         setSaving(false);
         resetValues();
         onClose(true);
+        if (onSuccess) {
+          onSuccess();
+        }
       }, 1500);
     } catch (error) {
       console.error("Erro ao registrar movimentação:", error);
       setServerError(
-        error.message || "Erro ao registrar movimentação. Tente novamente.",
+        error.message || "Erro ao registrar movimentação. Tente novamente."
       );
       setSaving(false);
     }
@@ -132,11 +132,12 @@ export default function MovimentacaoForm({
     <Dialog open={open} onOpenChange={() => !saving && onClose(false)}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl">Movimentação de Estoque</DialogTitle>
+          <DialogTitle className="text-xl">
+            Nova Movimentação
+          </DialogTitle>
           {produtoNome && (
             <p className="text-sm text-slate-500 mt-1">
-              {produtoNome} — Estoque atual:{" "}
-              <strong>{estoqueAtual || 0}</strong>
+              Produto: <span className="font-semibold text-slate-700">{produtoNome}</span>
             </p>
           )}
         </DialogHeader>
@@ -171,13 +172,11 @@ export default function MovimentacaoForm({
               value={values.tipo}
               onValueChange={(v) => setFieldValue("tipo", v)}
             >
-              <SelectTrigger
-                className={`h-11 rounded-lg mt-1 ${
-                  shouldShowError("tipo")
-                    ? "border-red-500 bg-red-50"
-                    : "bg-slate-100 border-slate-200"
-                }`}
-              >
+              <SelectTrigger className={`h-11 rounded-lg mt-1 ${
+                shouldShowError("tipo")
+                  ? "border-red-500 bg-red-50"
+                  : "bg-slate-100 border-slate-200"
+              }`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -203,9 +202,7 @@ export default function MovimentacaoForm({
             value={values.quantidade}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={
-              shouldShowError("quantidade") ? errors.quantidade : undefined
-            }
+            error={shouldShowError("quantidade") ? errors.quantidade : undefined}
             type="number"
             min="1"
             placeholder="0"

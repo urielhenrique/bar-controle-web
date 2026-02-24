@@ -1,5 +1,5 @@
 /**
- * FornecedorForm - Formulário de fornecedor com validações
+ * FornecedorFormV2 - Exemplo de formulário de fornecedor com validações
  * Usa: validators, formatters, useFormValidation, componentes de input especializados
  */
 
@@ -29,7 +29,7 @@ import {
   sanitizeInput,
 } from "@/utils/validators";
 
-export default function FornecedorForm({
+export default function FornecedorFormV2({
   open,
   onClose,
   fornecedor,
@@ -121,7 +121,7 @@ export default function FornecedorForm({
       // Trata erros específicos do servidor
       if (error.response?.data?.errors) {
         const serverErrors = error.response.data.errors;
-        Object.entries(serverErrors).forEach(([field, message]) => {
+        Object.keys(serverErrors).forEach((field) => {
           setFieldValue(field, values[field]);
         });
       }

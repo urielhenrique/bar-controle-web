@@ -1,5 +1,5 @@
 /**
- * ProdutoForm - Formulário de produto com validações robustas
+ * ProdutoFormV2 - Exemplo de formulário de produto com validações robustas
  * Usa: validators, formatters, useFormValidation, FormInput, FormCurrencyInput
  */
 
@@ -59,7 +59,7 @@ const VOLUMES = [
   "Outros",
 ];
 
-export default function ProdutoForm({
+export default function ProdutoFormV2({
   open,
   onClose,
   produto,
@@ -109,7 +109,6 @@ export default function ProdutoForm({
     handleBlur,
     handleSubmit,
     setFieldValue,
-    setFieldError,
     shouldShowError,
     resetValues,
   } = useFormValidation(
