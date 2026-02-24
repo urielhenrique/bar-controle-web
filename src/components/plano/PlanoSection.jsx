@@ -1,15 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePlan } from "@/lib/PlanContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Zap, ArrowRight, Mail, Loader2 } from "lucide-react";
 import billingService from "@/services/billing.service";
+import planoService from "@/services/plano.service";
 
 export default function PlanoSection() {
   const navigate = useNavigate();
   const { plan } = usePlan();
   const [sendingReport, setSendingReport] = useState(false);
+  const [planStatus, setPlanStatus] = useState(null);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+
+  useEffect(() => {
+    const loadStatus = async () => {
+      try {
+        const status = await planoService.getStatus();
+        setPlanStatus(status);
+      } catch (error) {
+        console.error("Erro ao carregar status do plano:", error);
+      } finally {
+        setLoadingStatus(false);
+      }
+    };
+
+    loadStatus();
+  }, []);
 
   const handleSendReport = async () => {
     setSendingReport(true);
@@ -62,6 +80,19 @@ export default function PlanoSection() {
     );
   }
 
+  const renderLimit = (label, used, limit) => {
+    const isUnlimited = limit === -1;
+    return (
+      <div className="flex items-center justify-between text-sm text-gray-600">
+        <span>{label}</span>
+        <span className="font-medium text-gray-900">
+          {used}
+          {isUnlimited ? " / ilimitado" : ` / ${limit}`}
+        </span>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-6">
@@ -76,6 +107,25 @@ export default function PlanoSection() {
           <p className="text-gray-500 mt-2">
             Produtos e usuarios ilimitados, relatorios e suporte prioritario.
           </p>
+          {!loadingStatus && planStatus?.limites && planStatus?.uso && (
+            <div className="mt-4 space-y-1">
+              {renderLimit(
+                "Produtos",
+                planStatus.uso.produtos,
+                planStatus.limites.produtos,
+              )}
+              {renderLimit(
+                "Usuarios",
+                planStatus.uso.usuarios,
+                planStatus.limites.usuarios,
+              )}
+              {renderLimit(
+                "Movimentacoes (mes)",
+                planStatus.uso.movimentacoesMes,
+                planStatus.limites.movimentacoesMes,
+              )}
+            </div>
+          )}
           <div className="flex items-center gap-3 mt-4">
             <Button
               onClick={() => navigate("/upgrade")}
