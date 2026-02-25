@@ -47,7 +47,6 @@ class ProdutoService {
 
     try {
       const response = await apiClient.get<any>("/produtos", params);
-      console.log("[ProdutoService] Resposta da API /produtos:", response);
 
       // A API retorna: { data: [...], nextCursor, hasMore }
       if (
@@ -55,20 +54,14 @@ class ProdutoService {
         typeof response === "object" &&
         Array.isArray(response.data)
       ) {
-        console.log("[ProdutoService] ✓ Extraindo data do objeto paginado");
         return response.data;
       }
 
       // Fallback: se for array direto
       if (Array.isArray(response)) {
-        console.log("[ProdutoService] ✓ Retornando array diretamente");
         return response;
       }
 
-      console.warn(
-        "[ProdutoService] ✗ Formato de resposta inesperado:",
-        response,
-      );
       return [];
     } catch (error) {
       console.error("[ProdutoService] Erro ao buscar produtos:", error);

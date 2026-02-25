@@ -46,6 +46,11 @@ export default function Produtos() {
   const [movOpen, setMovOpen] = useState(false);
   const [movProduto, setMovProduto] = useState(null);
 
+  const handleEditProduto = (produto) => {
+    setEditingProduto(produto);
+    setFormOpen(true);
+  };
+
   const loadData = async () => {
     if (!estabelecimentoId) return;
     setLoading(true);
@@ -252,8 +257,7 @@ export default function Produtos() {
                       variant="ghost"
                       className="h-9 w-9 rounded-xl text-gray-400 hover:bg-gray-100"
                       onClick={() => {
-                        setEditingProduto(p);
-                        setFormOpen(true);
+                        handleEditProduto(p);
                       }}
                     >
                       <Pencil className="w-4 h-4" />

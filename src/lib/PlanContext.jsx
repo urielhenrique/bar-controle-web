@@ -5,7 +5,7 @@ import billingService from "@/services/billing.service";
 const PlanContext = createContext();
 
 export const PlanProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [plan, setPlan] = useState("FREE");
   const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,8 @@ export const PlanProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       setPlan(user.plano || "FREE");
-      loadSubscription();
+      // Não carregar subscription automaticamente - será carregada sob demanda
+      // quando o usuário acessar páginas que precisam dessa informação
     }
   }, [user]);
 
@@ -22,12 +23,19 @@ export const PlanProvider = ({ children }) => {
       const subInfo = await billingService.getSubscriptionInfo();
       setSubscription(subInfo);
     } catch (error) {
-      const isRateLimited =
-        error?.status === 429 ||
+      // Silenciar erros esperados
+      const isExpectedError =
+        error?.status === 429 || // Rate limit
+        error?.status === 401 || // Não autenticado
+        error?.status === 404 || // Subscription não encontrada
+        String(error?.message || "")
+          .toLowerCase()
+          .includes("conectar") || // Servidor offline
         String(error?.message || "")
           .toLowerCase()
           .includes("muitas requisicoes");
-      if (!isRateLimited) {
+
+      if (!isExpectedError) {
         console.error("Erro ao carregar subscription:", error);
       }
     }

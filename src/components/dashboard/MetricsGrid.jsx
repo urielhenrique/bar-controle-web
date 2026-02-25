@@ -4,7 +4,7 @@ export default function MetricsGrid({ children }) {
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-        gap: "16px",
+        gap: "24px",
         marginBottom: "32px",
       }}
     >

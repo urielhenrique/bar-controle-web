@@ -41,6 +41,7 @@ class AuthService {
 
   /**
    * Fazer login com email e senha
+   * Tokens são armazenados em httpOnly cookies automaticamente pelo backend
    */
   async login(
     email: string,
@@ -53,8 +54,8 @@ class AuthService {
         password,
       },
     );
-    if (response.token) {
-      apiClient.setToken(response.token);
+    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
+    if (response.user) {
       localStorage.setItem("user", JSON.stringify(response.user));
     }
     return response;
@@ -62,6 +63,7 @@ class AuthService {
 
   /**
    * Fazer login com Google OAuth
+   * Tokens são armazenados em httpOnly cookies automaticamente pelo backend
    */
   async loginWithGoogle(
     credential: string,
@@ -72,24 +74,54 @@ class AuthService {
         credential,
       },
     );
-    if (response.token) {
-      apiClient.setToken(response.token);
+    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
+    if (response.user) {
+      localStorage.setItem("user", JSON.stringify(response.user));
+    }
+    return response;
+  }
+
+  /**
+   * Criar nova conta (registro)
+   * Tokens são armazenados em httpOnly cookies automaticamente pelo backend
+   */
+  async register(
+    nomeEstabelecimento: string,
+    nome: string,
+    email: string,
+    senha: string,
+  ): Promise<{ user: User; token: string }> {
+    const response = await apiClient.post<{ user: User; token: string }>(
+      "/auth/register",
+      {
+        nomeEstabelecimento,
+        nome,
+        email,
+        senha,
+      },
+    );
+    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
+    if (response.user) {
       localStorage.setItem("user", JSON.stringify(response.user));
     }
     return response;
   }
 
   getToken(): string | null {
-    return apiClient.getToken();
+    // Tokens estão em httpOnly cookies, não em localStorage
+    // Este método é mantido para compatibilidade mas não retorna nada
+    return null;
   }
 
   /**
    * Fazer logout
+   * Remove dados do cliente, backend remove cookies
    */
   logout(): void {
-    apiClient.clearToken();
     localStorage.removeItem("user");
     localStorage.removeItem("auth_token");
+    // Cookies httpOnly são removidos automaticamente pelo backend via logout endpoint
+    // ou expiração natural
   }
 
   /**

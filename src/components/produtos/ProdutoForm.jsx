@@ -34,7 +34,7 @@ import {
   validateQuantity,
   sanitizeInput,
 } from "@/utils/validators";
-import { formatQuantityInput } from "@/utils/formatters";
+import { formatQuantityInput, parseCurrencyBR } from "@/utils/formatters";
 
 const CATEGORIAS = [
   "Cerveja",
@@ -128,20 +128,45 @@ export default function ProdutoForm({
   );
 
   useEffect(() => {
-    if (produto) {
-      setFieldValue("nome", produto.nome || "");
-      setFieldValue("descricao", produto.descricao || "");
-      setFieldValue("categoria", produto.categoria || "Cerveja");
-      setFieldValue("volume", produto.volume || "600ml");
-      setFieldValue("estoqueAtual", produto.estoqueAtual || 0);
-      setFieldValue("estoqueMinimo", produto.estoqueMinimo || 5);
-      setFieldValue("precoCompra", produto.precoCompra || 0);
-      setFieldValue("precoVenda", produto.precoVenda || 0);
-      setFieldValue("fornecedorId", produto.fornecedorId || "");
-    } else {
+    if (!open) return;
+
+    let isActive = true;
+
+    const applyProdutoValues = (data) => {
+      setFieldValue("nome", data?.nome || "");
+      setFieldValue("descricao", data?.descricao || "");
+      setFieldValue("categoria", data?.categoria || "Cerveja");
+      setFieldValue("volume", data?.volume || "600ml");
+      setFieldValue("estoqueAtual", data?.estoqueAtual ?? 0);
+      setFieldValue("estoqueMinimo", data?.estoqueMinimo ?? 5);
+      setFieldValue("precoCompra", data?.precoCompra ?? 0);
+      setFieldValue("precoVenda", data?.precoVenda ?? 0);
+      setFieldValue("fornecedorId", data?.fornecedorId || "");
+      if (produto) {
+        applyProdutoValues(produto);
+
+        if (!produto.id) return;
+
+        try {
+          const fullProduto = await produtoService.getById(produto.id);
+          if (!isActive) return;
+          applyProdutoValues(fullProduto);
+        } catch (error) {
+          console.warn("Erro ao carregar produto para edição:", error);
+        }
+
+        return;
+      }
+
       resetValues();
-    }
-  }, [produto, open]);
+    };
+
+    loadProduto();
+
+    return () => {
+      isActive = false;
+    };
+  }, [produto?.id, open]);
 
   useEffect(() => {
     if (estabelecimentoId) {
@@ -166,8 +191,8 @@ export default function ProdutoForm({
         status: "OK",
         estoqueAtual: Number(formValues.estoqueAtual),
         estoqueMinimo: Number(formValues.estoqueMinimo),
-        precoCompra: Number(formValues.precoCompra),
-        precoVenda: Number(formValues.precoVenda),
+        precoCompra: parseCurrencyBR(String(formValues.precoCompra)),
+        precoVenda: parseCurrencyBR(String(formValues.precoVenda)),
       };
 
       if (produto) {

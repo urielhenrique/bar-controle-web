@@ -18,8 +18,6 @@ import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import Upgrade from "@/pages/Upgrade";
 import UpgradeSuccess from "@/pages/UpgradeSuccess";
-import apiClient from "@/api/api";
-import { useEffect } from "react";
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -110,11 +108,6 @@ const AppRoutes = () => {
 };
 
 function App() {
-  // Buscar CSRF token no carregamento da aplicação
-  useEffect(() => {
-    apiClient.fetchCsrfToken();
-  }, []);
-
   return (
     <AuthProvider>
       <PlanProvider>

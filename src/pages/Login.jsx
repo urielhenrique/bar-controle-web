@@ -116,13 +116,19 @@ export default function Login() {
           {/* Info Section */}
           <div className="mt-6 p-4 bg-slate-800 rounded-lg border border-slate-700">
             <p className="text-sm text-slate-300">
-              <span className="font-semibold">Credenciais de teste:</span>
+              <span className="font-semibold">
+                Para testar, execute no backend:
+              </span>
             </p>
-            <p className="text-xs text-slate-400 mt-2">
-              Email: <span className="font-mono">demo@example.com</span>
+            <p className="text-xs text-slate-400 mt-2 font-mono bg-slate-900 p-2 rounded">
+              npm run create:admin
+            </p>
+            <p className="text-xs text-slate-400 mt-3">Depois use:</p>
+            <p className="text-xs text-slate-400 mt-1">
+              Email: <span className="font-mono">admin@barstock.com.br</span>
             </p>
             <p className="text-xs text-slate-400">
-              Senha: <span className="font-mono">password123</span>
+              Senha: <span className="font-mono">Admin@123456</span>
             </p>
           </div>
         </form>

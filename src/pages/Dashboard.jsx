@@ -258,8 +258,8 @@ export default function Dashboard() {
           </MetricsGrid>
 
           {/* Alertas de Reposição */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-gray-50">
+          <div className="mt-8 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-gray-50">
               <h2 className="text-lg font-semibold text-gray-900">
                 Alertas de Reposição
               </h2>
@@ -284,7 +284,7 @@ export default function Dashboard() {
                 {stats.produtosRepor.slice(0, 8).map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between p-4 hover:bg-gray-50/50 transition-colors"
+                    className="flex items-center justify-between p-6 hover:bg-gray-50/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-sm font-bold text-gray-500">
@@ -307,7 +307,11 @@ export default function Dashboard() {
       )}
 
       {/* Status do Plano - Com Error Boundary */}
-      {!loading && <PlanoSection />}
+      {!loading && (
+        <div className="mt-10">
+          <PlanoSection />
+        </div>
+      )}
     </div>
   );
 }

@@ -22,7 +22,17 @@ class BillingService {
       const response = await apiClient.get("/billing/subscription");
       return response;
     } catch (error) {
-      console.error("Erro ao buscar subscription:", error);
+      // Silenciar erros esperados (servidor offline, não autenticado, etc)
+      const isExpectedError =
+        error?.status === 401 ||
+        error?.status === 404 ||
+        String(error?.message || "")
+          .toLowerCase()
+          .includes("conectar");
+
+      if (!isExpectedError) {
+        console.error("Erro ao buscar subscription:", error);
+      }
       throw error;
     }
   }

@@ -39,32 +39,73 @@ export function parseCurrencyBR(value: string): number {
   // Remove "R$" e espaços
   const cleaned = value.replace(/R\$\s?/g, "").trim();
 
-  // Converte formato brasileiro: replace "." (milhar) remove, replace "," (decimal) com "."
-  const normalized = cleaned.replace(/\./g, "").replace(/,/g, ".");
+  const hasComma = cleaned.includes(",");
+  const hasDot = cleaned.includes(".");
+
+  let normalized = cleaned;
+
+  if (hasComma) {
+    // Formato BR: "." milhar e "," decimal
+    normalized = cleaned.replace(/\./g, "").replace(/,/g, ".");
+  } else if (hasDot) {
+    // Formato alternativo: "." decimal
+    normalized = cleaned.replace(/,/g, "");
+  }
 
   return parseFloat(normalized) || 0;
 }
 
 /**
  * Formata input de moeda em tempo real (permite digitação)
+ * Aceita números, vírgula (,) e ponto (.) como separadores
  * @param value - Valor digitado
- * @returns Valor formatado ou original se inválido
+ * @returns Valor formatado para exibição
  */
 export function formatCurrencyInput(value: string): string {
   if (!value) return "";
 
-  // Remove tudo exceto números
-  const digits = value.replace(/\D/g, "");
+  // Se o valor começa com "R$", remove
+  let cleanValue = value.replace(/^R\$\s?/, "");
 
-  if (!digits) return "";
+  // Aceita vírgula ou ponto como separador decimal
+  // Remove espaços
+  cleanValue = cleanValue.replace(/\s/g, "");
 
-  // Converte em número (considerando 2 casas decimais)
-  const numValue = parseInt(digits, 10) / 100;
+  // Remove tudo que não é número, vírgula ou ponto
+  cleanValue = cleanValue.replace(/[^\d,.]/g, "");
 
-  return numValue.toLocaleString("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  if (!cleanValue) return "";
+
+  // Permite apenas um separador decimal (o último digitado)
+  const lastCommaIndex = cleanValue.lastIndexOf(",");
+  const lastDotIndex = cleanValue.lastIndexOf(".");
+  const sepIndex = Math.max(lastCommaIndex, lastDotIndex);
+  const sepChar = sepIndex === lastCommaIndex ? "," : ".";
+
+  let integerPart = "";
+  let decimalPart = "";
+
+  if (sepIndex >= 0) {
+    integerPart = cleanValue.slice(0, sepIndex).replace(/[.,]/g, "");
+    decimalPart = cleanValue.slice(sepIndex + 1).replace(/[.,]/g, "");
+  } else {
+    integerPart = cleanValue.replace(/[.,]/g, "");
+  }
+
+  integerPart = integerPart.replace(/^0+(?=\d)/, "");
+  if (!integerPart && sepIndex >= 0) {
+    integerPart = "0";
+  }
+
+  if (decimalPart) {
+    decimalPart = decimalPart.slice(0, 2);
+  }
+
+  if (sepIndex >= 0) {
+    return `${integerPart}${sepChar}${decimalPart}`;
+  }
+
+  return integerPart;
 }
 
 // ============================================================================

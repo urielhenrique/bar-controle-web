@@ -3,11 +3,11 @@
  * Com formatação automática e validação
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AlertCircle, DollarSign } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatCurrencyInput, parseCurrencyBR } from "@/utils/formatters";
+import { parseCurrencyBR } from "@/utils/formatters";
 
 interface FormCurrencyInputProps {
   label: string;
@@ -27,7 +27,7 @@ interface FormCurrencyInputProps {
 
 /**
  * Input para moeda brasileira com formatação automática
- * 
+ *
  * @example
  * <FormCurrencyInput
  *   label="Preço de Venda"
@@ -57,22 +57,49 @@ export default function FormCurrencyInput({
   const hasError = !!error;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCurrencyInput(e.target.value);
-    
-    // Cria um evento sintético com o valor formatado
+    const sanitized = e.target.value.replace(/[^\d.,]/g, "");
+
+    setLocalValue(sanitized);
+
+    // Cria um evento sintético com o valor sanitizado
     const syntheticEvent = {
       ...e,
       target: {
         ...e.target,
-        value: formatted,
+        value: sanitized,
       },
     };
-    
+
     onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
   };
 
-  const displayValue = formatCurrencyInput(String(value));
+  const rawValue = String(value ?? "");
+  const displayValue =
+    rawValue === "0" || rawValue === "0,00" || rawValue === "0.00"
+      ? ""
+      : rawValue;
   const numericValue = parseCurrencyBR(String(value));
+
+  const [localValue, setLocalValue] = useState(displayValue);
+
+  useEffect(() => {
+    setLocalValue(displayValue);
+  }, [displayValue]);
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (rawValue === "0" || rawValue === "0,00" || rawValue === "0.00") {
+      setLocalValue("");
+      const syntheticEvent = {
+        ...e,
+        target: {
+          ...e.target,
+          value: "",
+        },
+      };
+
+      onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
+    }
+  };
 
   return (
     <div className={`space-y-1 ${className}`}>
@@ -98,22 +125,23 @@ export default function FormCurrencyInput({
         <Input
           type="text"
           name={name}
-          value={displayValue}
+          value={localValue}
           onChange={handleChange}
           onBlur={onBlur}
+          onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}
+          inputMode="decimal"
+          pattern="[0-9]*[.,]?[0-9]{0,2}"
           className={`h-11 rounded-lg mt-1 pl-10 transition-all ${
             hasError
               ? "border-red-500 bg-red-50 text-slate-900 focus:ring-red-500 focus:border-red-500"
-              : "bg-slate-100 border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
+              : "bg-white border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
           }`}
         />
       </div>
 
-      {hint && !hasError && (
-        <p className="text-xs text-slate-500">{hint}</p>
-      )}
+      {hint && !hasError && <p className="text-xs text-slate-500">{hint}</p>}
 
       {hasError && (
         <div className="flex items-center gap-1 text-xs text-red-600">
@@ -124,16 +152,18 @@ export default function FormCurrencyInput({
 
       {numericValue < minimum && numericValue > 0 && (
         <p className="text-xs text-orange-600">
-          Mínimo: R$ {minimum.toLocaleString("pt-BR", {
+          Mínimo: R${" "}
+          {minimum.toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
         </p>
       )}
-      
+
       {numericValue > maximum && (
         <p className="text-xs text-orange-600">
-          Máximo: R$ {maximum.toLocaleString("pt-BR", {
+          Máximo: R${" "}
+          {maximum.toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}

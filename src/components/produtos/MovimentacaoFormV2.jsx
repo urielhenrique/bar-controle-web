@@ -34,9 +34,8 @@ import {
 import { formatQuantityInput } from "@/utils/formatters";
 
 const TIPOS_MOVIMENTACAO = [
-  { value: "entrada", label: "Entrada" },
-  { value: "saída", label: "Saída" },
-  { value: "ajuste", label: "Ajuste" },
+  { value: "Entrada", label: "Entrada" },
+  { value: "Saida", label: "Saída" },
 ];
 
 export default function MovimentacaoFormV2({
@@ -80,11 +79,11 @@ export default function MovimentacaoFormV2({
     resetValues,
   } = useFormValidation(
     {
-      tipo: "entrada",
+      tipo: "Entrada",
       quantidade: "",
       observacao: "",
     },
-    validators
+    validators,
   );
 
   useEffect(() => {
@@ -108,7 +107,7 @@ export default function MovimentacaoFormV2({
       };
 
       await movimentacaoService.create(data);
-      
+
       setSuccessMessage("Movimentação registrada com sucesso!");
 
       setTimeout(() => {
@@ -122,7 +121,7 @@ export default function MovimentacaoFormV2({
     } catch (error) {
       console.error("Erro ao registrar movimentação:", error);
       setServerError(
-        error.message || "Erro ao registrar movimentação. Tente novamente."
+        error.message || "Erro ao registrar movimentação. Tente novamente.",
       );
       setSaving(false);
     }
@@ -132,12 +131,13 @@ export default function MovimentacaoFormV2({
     <Dialog open={open} onOpenChange={() => !saving && onClose(false)}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl">
-            Nova Movimentação
-          </DialogTitle>
+          <DialogTitle className="text-xl">Nova Movimentação</DialogTitle>
           {produtoNome && (
             <p className="text-sm text-slate-500 mt-1">
-              Produto: <span className="font-semibold text-slate-700">{produtoNome}</span>
+              Produto:{" "}
+              <span className="font-semibold text-slate-700">
+                {produtoNome}
+              </span>
             </p>
           )}
         </DialogHeader>
@@ -172,11 +172,13 @@ export default function MovimentacaoFormV2({
               value={values.tipo}
               onValueChange={(v) => setFieldValue("tipo", v)}
             >
-              <SelectTrigger className={`h-11 rounded-lg mt-1 ${
-                shouldShowError("tipo")
-                  ? "border-red-500 bg-red-50"
-                  : "bg-slate-100 border-slate-200"
-              }`}>
+              <SelectTrigger
+                className={`h-11 rounded-lg mt-1 ${
+                  shouldShowError("tipo")
+                    ? "border-red-500 bg-red-50"
+                    : "bg-slate-100 border-slate-200"
+                }`}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -202,7 +204,9 @@ export default function MovimentacaoFormV2({
             value={values.quantidade}
             onChange={handleChange}
             onBlur={handleBlur}
-            error={shouldShowError("quantidade") ? errors.quantidade : undefined}
+            error={
+              shouldShowError("quantidade") ? errors.quantidade : undefined
+            }
             type="number"
             min="1"
             placeholder="0"

@@ -10,14 +10,14 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
-    // Only check auth state on mount if we have a stored user
-    // This prevents infinite loops on login page
+    // Apenas restaurar estado de sessão anterior sem fazer requisição
     const storedUser = authService.getStoredUser();
     if (storedUser) {
-      checkUserAuth();
-    } else {
-      setIsLoadingAuth(false);
+      // Usuário tinha sessão anterior - restaurar estado localmente
+      setUser(storedUser);
+      setIsAuthenticated(true);
     }
+    setIsLoadingAuth(false);
   }, []);
 
   const isRateLimitError = (error) =>
@@ -25,38 +25,6 @@ export const AuthProvider = ({ children }) => {
     String(error?.message || "")
       .toLowerCase()
       .includes("muitas requisicoes");
-
-  const checkUserAuth = async () => {
-    try {
-      setIsLoadingAuth(true);
-      const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
-      setIsAuthenticated(true);
-      setIsLoadingAuth(false);
-    } catch (error) {
-      console.error("Falha ao verificar autenticação:", error);
-      if (isRateLimitError(error)) {
-        const storedUser = authService.getStoredUser();
-        if (storedUser) {
-          setUser(storedUser);
-          setIsAuthenticated(true);
-        }
-        setIsLoadingAuth(false);
-        setAuthError({
-          type: "rate_limited",
-          message: "Servidor ocupado. Tente novamente em instantes.",
-        });
-        return;
-      }
-      setIsLoadingAuth(false);
-      setIsAuthenticated(false);
-      authService.logout();
-      setAuthError({
-        type: "auth_required",
-        message: "Autenticação necessária",
-      });
-    }
-  };
 
   const login = async (email, password) => {
     try {
@@ -153,7 +121,6 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         navigateToLogin,
-        checkAppState,
       }}
     >
       {children}

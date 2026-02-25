@@ -25,7 +25,7 @@ interface FormPhoneInputProps {
 
 /**
  * Input para telefone brasileiro com máscara automática
- * 
+ *
  * @example
  * <FormPhoneInput
  *   label="Telefone"
@@ -53,7 +53,7 @@ export default function FormPhoneInput({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneBR(e.target.value);
-    
+
     const syntheticEvent = {
       ...e,
       target: {
@@ -61,7 +61,7 @@ export default function FormPhoneInput({
         value: formatted,
       },
     };
-    
+
     onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
   };
 
@@ -88,14 +88,12 @@ export default function FormPhoneInput({
           className={`h-11 rounded-lg mt-1 pl-10 transition-all ${
             hasError
               ? "border-red-500 bg-red-50 text-slate-900 focus:ring-red-500 focus:border-red-500"
-              : "bg-slate-100 border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
+              : "bg-white border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
           }`}
         />
       </div>
 
-      {hint && !hasError && (
-        <p className="text-xs text-slate-500">{hint}</p>
-      )}
+      {hint && !hasError && <p className="text-xs text-slate-500">{hint}</p>}
 
       {hasError && (
         <div className="flex items-center gap-1 text-xs text-red-600">

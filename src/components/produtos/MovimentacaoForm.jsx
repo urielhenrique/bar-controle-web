@@ -34,9 +34,8 @@ import {
 import { formatQuantityInput } from "@/utils/formatters";
 
 const TIPOS_MOVIMENTACAO = [
-  { value: "entrada", label: "Entrada" },
-  { value: "saída", label: "Saída" },
-  { value: "ajuste", label: "Ajuste" },
+  { value: "Entrada", label: "Entrada" },
+  { value: "Saida", label: "Saída" },
 ];
 
 export default function MovimentacaoForm({
@@ -83,7 +82,7 @@ export default function MovimentacaoForm({
     resetValues,
   } = useFormValidation(
     {
-      tipo: "entrada",
+      tipo: "Entrada",
       quantidade: "",
       observacao: "",
     },

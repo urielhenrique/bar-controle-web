@@ -30,7 +30,7 @@ interface FormInputProps {
 
 /**
  * Input com validação integrada
- * 
+ *
  * @example
  * <FormInput
  *   label="Nome do Produto"
@@ -109,14 +109,12 @@ export default function FormInput({
           } ${
             hasError
               ? "border-red-500 bg-red-50 text-slate-900 focus:ring-red-500 focus:border-red-500"
-              : "bg-slate-100 border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
+              : "bg-white border-slate-200 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500"
           } ${inputClassName}`}
         />
       </div>
 
-      {hint && !hasError && (
-        <p className="text-xs text-slate-500">{hint}</p>
-      )}
+      {hint && !hasError && <p className="text-xs text-slate-500">{hint}</p>}
 
       {hasError && (
         <div className="flex items-center gap-1 text-xs text-red-600">
