@@ -13,7 +13,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, authError } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,6 +56,14 @@ export default function Login() {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          {authError?.type === "session_expired" && (
+            <Alert variant="destructive" className="bg-red-950 border-red-900">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-red-200">
+                {authError.message}
+              </AlertDescription>
+            </Alert>
+          )}
           {error && (
             <Alert variant="destructive" className="bg-red-950 border-red-900">
               <AlertCircle className="h-4 w-4" />

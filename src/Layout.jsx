@@ -14,6 +14,7 @@ import {
   Crown,
   Settings,
   MessageSquare,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,9 @@ export default function Layout({ children, currentPageName }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout, user } = useAuth();
   const { plan } = usePlan();
+
+  // Check if user is admin
+  const isAdmin = user?.email === import.meta.env.VITE_MY_ADMIN_EMAIL;
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -93,6 +97,23 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 );
               })}
+
+              {/* Admin Monitoring Link (Mobile) */}
+              {isAdmin && (
+                <Link
+                  to="/internal/monitoring"
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all",
+                    currentPageName === "Monitoring"
+                      ? "bg-indigo-50 text-indigo-700"
+                      : "text-gray-600 hover:bg-indigo-50 hover:text-indigo-700",
+                  )}
+                >
+                  <Activity className="w-5 h-5" />
+                  📊 Monitoramento
+                </Link>
+              )}
               <button
                 onClick={() => logout()}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-red-50 hover:text-red-700 w-full"
@@ -168,6 +189,27 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
               );
             })}
+
+            {/* Admin Monitoring Link */}
+            {isAdmin && (
+              <Link
+                to="/internal/monitoring"
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                  currentPageName === "Monitoring"
+                    ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                    : "text-gray-500 hover:bg-indigo-50 hover:text-indigo-700",
+                )}
+              >
+                <Activity
+                  className={cn(
+                    "w-5 h-5",
+                    currentPageName === "Monitoring" ? "text-indigo-600" : "",
+                  )}
+                />
+                📊 Monitoramento
+              </Link>
+            )}
           </nav>
 
           {/* User Info & Logout */}

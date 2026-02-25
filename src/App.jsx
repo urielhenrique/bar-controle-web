@@ -14,6 +14,7 @@ import { AuthProvider, useAuth } from "@/lib/AuthContext";
 import { PlanProvider } from "@/lib/PlanContext";
 import LoginV2 from "@/pages/LoginV2";
 import AdminDashboard from "@/pages/AdminDashboard";
+import Monitoring from "@/pages/Monitoring";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import TermsOfService from "@/pages/TermsOfService";
 import Upgrade from "@/pages/Upgrade";
@@ -94,6 +95,7 @@ const AppRoutes = () => {
       <Route path="/terms-of-service" element={<TermsOfService />} />
       <Route path="/login" element={<LoginV2 />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/internal/monitoring" element={<Monitoring />} />
       <Route path="/upgrade" element={<Upgrade />} />
       <Route path="/upgrade-success" element={<UpgradeSuccess />} />
       {isLogged ? (

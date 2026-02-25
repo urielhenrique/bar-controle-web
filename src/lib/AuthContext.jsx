@@ -10,14 +10,27 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
-    // Apenas restaurar estado de sessão anterior sem fazer requisição
-    const storedUser = authService.getStoredUser();
-    if (storedUser) {
-      // Usuário tinha sessão anterior - restaurar estado localmente
-      setUser(storedUser);
-      setIsAuthenticated(true);
-    }
-    setIsLoadingAuth(false);
+    // Restaurar sessão a partir do backend (cookies httpOnly)
+    const restoreSession = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+        setIsAuthenticated(true);
+        setAuthError(null);
+      } catch (error) {
+        // Usuário não autenticado (esperado na primeira vez)
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError({
+          type: "session_expired",
+          message: "Sessao expirada. Faca login novamente.",
+        });
+      } finally {
+        setIsLoadingAuth(false);
+      }
+    };
+
+    restoreSession();
   }, []);
 
   const isRateLimitError = (error) =>
@@ -28,16 +41,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      setIsLoadingAuth(true);
       setAuthError(null);
       const response = await authService.login(email, password);
       setUser(response.user);
       setIsAuthenticated(true);
-      setIsLoadingAuth(false);
+      setAuthError(null);
       return response;
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      setIsLoadingAuth(false);
       setIsAuthenticated(false);
       setAuthError({
         type: "login_failed",
@@ -49,16 +60,14 @@ export const AuthProvider = ({ children }) => {
 
   const loginWithGoogle = async (credential) => {
     try {
-      setIsLoadingAuth(true);
       setAuthError(null);
       const response = await authService.loginWithGoogle(credential);
       setUser(response.user);
       setIsAuthenticated(true);
-      setIsLoadingAuth(false);
+      setAuthError(null);
       return response;
     } catch (error) {
       console.error("Erro ao fazer login com Google:", error);
-      setIsLoadingAuth(false);
       setIsAuthenticated(false);
       setAuthError({
         type: "login_failed",
@@ -70,7 +79,6 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (nomeEstabelecimento, nome, email, senha) => {
     try {
-      setIsLoadingAuth(true);
       setAuthError(null);
       const response = await authService.register(
         nomeEstabelecimento,
@@ -80,11 +88,10 @@ export const AuthProvider = ({ children }) => {
       );
       setUser(response.user);
       setIsAuthenticated(true);
-      setIsLoadingAuth(false);
+      setAuthError(null);
       return response;
     } catch (error) {
       console.error("Erro ao criar conta:", error);
-      setIsLoadingAuth(false);
       setIsAuthenticated(false);
       setAuthError({
         type: "register_failed",
@@ -98,6 +105,7 @@ export const AuthProvider = ({ children }) => {
     await authService.logout();
     setUser(null);
     setIsAuthenticated(false);
+    setAuthError(null);
 
     if (shouldRedirect) {
       window.location.href = "/login";
@@ -108,7 +116,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const updatedUser = await authService.getCurrentUser();
       setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setAuthError(null);
     } catch (error) {
       console.error("Erro ao atualizar dados do usuário:", error);
     }

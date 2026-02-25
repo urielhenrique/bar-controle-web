@@ -27,7 +27,7 @@ export default function LoginV2() {
   const [nome, setNome] = useState("");
   const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
   const navigate = useNavigate();
-  const { login, loginWithGoogle, register } = useAuth();
+  const { login, loginWithGoogle, register, authError } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -133,7 +133,7 @@ export default function LoginV2() {
             }`}
           >
             <LogIn className="inline-block w-4 h-4 mr-2" />
-            Entrar
+            Login
           </button>
           <button
             onClick={() => setTab("signup")}
@@ -149,6 +149,14 @@ export default function LoginV2() {
         </div>
 
         {/* Error Alert */}
+        {authError?.type === "session_expired" && (
+          <Alert className="mb-6 bg-red-900/20 border-red-500/30 rounded-lg">
+            <AlertCircle className="h-4 w-4 text-red-500" />
+            <AlertDescription className="text-red-400 ml-2">
+              {authError.message}
+            </AlertDescription>
+          </Alert>
+        )}
         {error && (
           <Alert className="mb-6 bg-red-900/20 border-red-500/30 rounded-lg">
             <AlertCircle className="h-4 w-4 text-red-500" />
@@ -258,7 +266,7 @@ export default function LoginV2() {
                 placeholder="Seu Bar"
                 value={nomeEstabelecimento}
                 onChange={(e) => setNomeEstabelecimento(e.target.value)}
-                className="bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
+                className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                 disabled={isLoading}
               />
             </div>
@@ -270,7 +278,7 @@ export default function LoginV2() {
                 placeholder="João Silva"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                className="bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
+                className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                 disabled={isLoading}
               />
             </div>
@@ -284,7 +292,7 @@ export default function LoginV2() {
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
+                  className="pl-10 bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                   disabled={isLoading}
                 />
               </div>
@@ -299,7 +307,7 @@ export default function LoginV2() {
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-12 bg-slate-600 border-slate-500 text-slate-900 placeholder-slate-400 focus:border-blue-400"
+                  className="pl-10 pr-12 bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-blue-500"
                   disabled={isLoading}
                 />
                 <button

@@ -98,14 +98,7 @@ class ApiClient {
         }
         return response;
       },
-      (error: AxiosError) => {
-        if (error.response?.status === 401) {
-          // Token inválido ou expirado - redirecionar para login
-          // Não precisa limpar localStorage pois não usamos mais
-          window.location.href = "/login";
-        }
-        return Promise.reject(error);
-      },
+      (error: AxiosError) => Promise.reject(error),
     );
   }
 

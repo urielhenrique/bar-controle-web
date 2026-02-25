@@ -55,10 +55,7 @@ class AuthService {
         password,
       },
     );
-    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
-    if (response.user) {
-      localStorage.setItem("user", JSON.stringify(response.user));
-    }
+    // Cookies httpOnly são definidos automaticamente pelo backend
     return response;
   }
 
@@ -75,10 +72,7 @@ class AuthService {
         credential,
       },
     );
-    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
-    if (response.user) {
-      localStorage.setItem("user", JSON.stringify(response.user));
-    }
+    // Cookies httpOnly são definidos automaticamente pelo backend
     return response;
   }
 
@@ -101,10 +95,7 @@ class AuthService {
         senha,
       },
     );
-    // Armazenar apenas dados do usuário (tokens já estão em cookies httpOnly)
-    if (response.user) {
-      localStorage.setItem("user", JSON.stringify(response.user));
-    }
+    // Cookies httpOnly são definidos automaticamente pelo backend
     return response;
   }
 
@@ -116,13 +107,16 @@ class AuthService {
 
   /**
    * Fazer logout
-   * Remove dados do cliente, backend remove cookies
+   * Backend remove cookies httpOnly automaticamente
    */
-  logout(): void {
-    localStorage.removeItem("user");
-    localStorage.removeItem("auth_token");
-    // Cookies httpOnly são removidos automaticamente pelo backend via logout endpoint
-    // ou expiração natural
+  async logout(): Promise<void> {
+    try {
+      // Chamar endpoint de logout para limpar cookies no backend
+      await apiClient.post("/auth/logout", {});
+    } catch (error) {
+      // Continuar mesmo se falhar (pode estar offline)
+      console.error("Erro ao fazer logout:", error);
+    }
   }
 
   /**
@@ -130,23 +124,27 @@ class AuthService {
    */
   async updateUser(data: Partial<User>): Promise<User> {
     const user = await apiClient.put<User>("/auth/me", data);
-    localStorage.setItem("user", JSON.stringify(user));
+    // Usuário será refetched via GET /auth/me se necessário
     return user;
   }
 
   /**
-   * Obter usuário armazenado localmente
+   * Este método é DEPRECATED - não use mais localStorage
+   * Use AuthContext.isAuthenticated em vez disso
    */
   getStoredUser(): User | null {
-    const userStr = localStorage.getItem("user");
-    return userStr ? JSON.parse(userStr) : null;
+    // Retorna null sempre - sessão é validada via GET /auth/me
+    return null;
   }
 
   /**
    * Verificar se está autenticado
+   * Use AuthContext em vez disso
    */
   isAuthenticated(): boolean {
-    return !!apiClient.getToken() && !!this.getStoredUser();
+    // Sempre retorna false aqui
+    // A validação real é feita no AuthContext via GET /auth/me
+    return false;
   }
 }
 
