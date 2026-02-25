@@ -68,7 +68,7 @@ export default function FornecedorForm({
     handleSubmit,
     setFieldValue,
     shouldShowError,
-    resetValues,
+    setValues,
   } = useFormValidation(
     {
       nome: "",
@@ -80,17 +80,45 @@ export default function FornecedorForm({
     validators,
   );
 
+  // Reset manual para novo fornecedor
+  const resetFormValues = () => {
+    setValues({
+      nome: "",
+      telefone: "",
+      cnpj: "",
+      email: "",
+      prazoEntregaDias: 3,
+    });
+  };
+
   useEffect(() => {
-    if (fornecedor) {
-      setFieldValue("nome", fornecedor.nome || "");
-      setFieldValue("telefone", fornecedor.telefone || "");
-      setFieldValue("cnpj", fornecedor.cnpj || "");
-      setFieldValue("email", fornecedor.email || "");
-      setFieldValue("prazoEntregaDias", fornecedor.prazoEntregaDias || 3);
+    console.log("[FornecedorForm] Modal mudou:", {
+      open,
+      fornecedorId: fornecedor?.id,
+      fornecedor: fornecedor,
+    });
+
+    if (!open) return;
+
+    if (fornecedor?.id) {
+      console.log("[FornecedorForm] Editando fornecedor:", fornecedor);
+
+      // Formata valores antes de setar
+      const formattedValues = {
+        nome: fornecedor.nome || "",
+        telefone: fornecedor.telefone || "",
+        cnpj: fornecedor.cnpj || "",
+        email: fornecedor.email || "",
+        prazoEntregaDias: fornecedor.prazoEntregaDias || 3,
+      };
+
+      console.log("[FornecedorForm] Setando valores:", formattedValues);
+      setValues(formattedValues);
     } else {
-      resetValues();
+      console.log("[FornecedorForm] Novo fornecedor, resetando");
+      resetFormValues();
     }
-  }, [fornecedor, open]);
+  }, [fornecedor?.id, open]);
 
   const onSubmit = async (formValues) => {
     setServerError("");
@@ -102,6 +130,8 @@ export default function FornecedorForm({
         ...formValues,
         estabelecimentoId,
       };
+
+      console.log("[FornecedorForm] Enviando dados:", data);
 
       if (fornecedor) {
         await fornecedorService.update(fornecedor.id, data);

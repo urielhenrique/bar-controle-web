@@ -47,6 +47,12 @@ export default function Produtos() {
   const [movProduto, setMovProduto] = useState(null);
 
   const handleEditProduto = (produto) => {
+    console.log("[Produtos] Clicou para editar:", {
+      id: produto.id,
+      nome: produto.nome,
+      precoVenda: produto.precoVenda,
+      precoCompra: produto.precoCompra,
+    });
     setEditingProduto(produto);
     setFormOpen(true);
   };

@@ -47,6 +47,19 @@ const CATEGORIAS = [
   "Outros",
 ];
 
+// Mapa de normalização de categorias para o backend
+const CATEGORIA_NORMALIZE_MAP = {
+  Água: "Agua",
+  Energético: "Energetico",
+};
+
+/**
+ * Normaliza categoria para o formato esperado pelo backend (sem acentos)
+ */
+const normalizarCategoria = (categoria) => {
+  return CATEGORIA_NORMALIZE_MAP[categoria] || categoria;
+};
+
 const VOLUMES = [
   "269ml",
   "350ml",
@@ -111,7 +124,7 @@ export default function ProdutoForm({
     setFieldValue,
     setFieldError,
     shouldShowError,
-    resetValues,
+    setValues,
   } = useFormValidation(
     {
       nome: "",
@@ -127,51 +140,118 @@ export default function ProdutoForm({
     validators,
   );
 
+  // Reset manual para novo produto
+  const resetFormValues = () => {
+    setValues({
+      nome: "",
+      descricao: "",
+      categoria: "Cerveja",
+      volume: "600ml",
+      estoqueAtual: 0,
+      estoqueMinimo: 5,
+      precoCompra: 0,
+      precoVenda: 0,
+      fornecedorId: "",
+    });
+  };
+
   useEffect(() => {
-    if (!open) return;
+    console.log("[ProdutoForm] useEffect acionado:", {
+      open,
+      produtoId: produto?.id,
+      produtoNome: produto?.nome,
+    });
+
+    if (!open) {
+      console.log("[ProdutoForm] Modal fechado, saindo");
+      return;
+    }
 
     let isActive = true;
 
     const applyProdutoValues = (data) => {
+      console.log("[ProdutoForm] applyProdutoValues chamada com dados:", data);
+
       if (!data) {
-        resetValues();
+        console.log("[ProdutoForm] Dados nulos, resetando formulário");
+        resetFormValues();
         return;
       }
 
-      setFieldValue("nome", data.nome || "");
-      setFieldValue("descricao", data.descricao || "");
-      setFieldValue("categoria", data.categoria || "Cerveja");
-      setFieldValue("volume", data.volume || "600ml");
-      setFieldValue("estoqueAtual", data.estoqueAtual ?? 0);
-      setFieldValue("estoqueMinimo", data.estoqueMinimo ?? 5);
-      setFieldValue("precoCompra", data.precoCompra || 0);
-      setFieldValue("precoVenda", data.precoVenda || 0);
-      setFieldValue("fornecedorId", data.fornecedorId || "");
+      console.log(
+        "[ProdutoForm] Atualizando todo o estado do formulário com setValues",
+      );
+
+      // Usar setValues para atualizar tudo de uma vez, mais eficiente
+      setValues({
+        nome: data.nome || "",
+        descricao: data.descricao || "",
+        categoria: data.categoria || "Cerveja",
+        volume: data.volume || "600ml",
+        estoqueAtual: data.estoqueAtual ?? 0,
+        estoqueMinimo: data.estoqueMinimo ?? 5,
+        precoCompra: data.precoCompra ?? 0,
+        precoVenda: data.precoVenda ?? 0,
+        fornecedorId: data.fornecedorId || "",
+      });
+
+      console.log("[ProdutoForm] Estado do formulário atualizado!");
     };
 
     const loadProduto = async () => {
-      if (!produto?.id) return;
+      if (!produto?.id) {
+        console.log("[ProdutoForm] Produto sem ID, não carregando");
+        return;
+      }
 
       try {
+        console.log("[ProdutoForm] Carregando produto:", produto.id);
         const fullProduto = await produtoService.getById(produto.id);
-        if (!isActive) return;
+        console.log("[ProdutoForm] Resposta recebida da API:", fullProduto);
+        console.log(
+          "[ProdutoForm] fullProduto.precoVenda:",
+          fullProduto?.precoVenda,
+        );
+
+        if (!isActive) {
+          console.log(
+            "[ProdutoForm] Resposta recebida mas componente foi desmontado",
+          );
+          return;
+        }
+
+        console.log(
+          "[ProdutoForm] Chamando applyProdutoValues com fullProduto",
+        );
         applyProdutoValues(fullProduto);
       } catch (error) {
-        console.warn("Erro ao carregar produto para edição:", error);
+        console.warn("[ProdutoForm] Erro ao carregar produto:", error);
       }
     };
 
     if (produto?.id) {
+      console.log("[ProdutoForm] Editando produto existente:", produto.id);
       applyProdutoValues(produto);
       loadProduto();
     } else {
-      resetValues();
+      console.log("[ProdutoForm] Novo produto, resetando formulário");
+      resetFormValues();
     }
 
     return () => {
       isActive = false;
     };
-  }, [produto?.id, open]);
+  }, [produto?.id, produto, open]);
+
+  // Debug: Log dos valores do formulário quando mudam
+  useEffect(() => {
+    console.log("[ProdutoForm] Estado do formulário:", {
+      nome: values.nome,
+      precoVenda: values.precoVenda,
+      precoCompra: values.precoCompra,
+      estoqueAtual: values.estoqueAtual,
+    });
+  }, [values.nome, values.precoVenda, values.precoCompra, values.estoqueAtual]);
 
   useEffect(() => {
     if (estabelecimentoId) {
@@ -203,6 +283,7 @@ export default function ProdutoForm({
 
       const data = {
         ...formValues,
+        categoria: normalizarCategoria(formValues.categoria),
         estabelecimentoId,
         status: "OK",
         estoqueAtual: Number(formValues.estoqueAtual) || 0,
@@ -210,6 +291,15 @@ export default function ProdutoForm({
         precoCompra,
         precoVenda,
       };
+
+      console.log("[ProdutoForm] Enviando dados:", {
+        nome: data.nome,
+        categoria: data.categoria,
+        precoCompra: data.precoCompra,
+        precoVenda: data.precoVenda,
+        estoqueAtual: data.estoqueAtual,
+        estoqueMinimo: data.estoqueMinimo,
+      });
 
       if (produto) {
         await produtoService.update(produto.id, data);
@@ -225,9 +315,12 @@ export default function ProdutoForm({
       }, 1500);
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
-      setServerError(
-        error.message || "Erro ao salvar produto. Tente novamente.",
-      );
+      const mensagemErro =
+        error?.response?.data?.error ||
+        error.message ||
+        "Erro ao salvar produto. Tente novamente.";
+      const detalhes = error?.response?.data?.details;
+      setServerError(detalhes ? `${mensagemErro} - ${detalhes}` : mensagemErro);
       setSaving(false);
     }
   };
@@ -422,14 +515,16 @@ export default function ProdutoForm({
                 Fornecedor
               </Label>
               <Select
-                value={values.fornecedorId}
-                onValueChange={(v) => setFieldValue("fornecedorId", v)}
+                value={values.fornecedorId || "none"}
+                onValueChange={(v) =>
+                  setFieldValue("fornecedorId", v === "none" ? "" : v)
+                }
               >
                 <SelectTrigger className="h-11 rounded-lg mt-1">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum</SelectItem>
+                  <SelectItem value="none">Nenhum</SelectItem>
                   {fornecedores.map((f) => (
                     <SelectItem key={f.id} value={f.id}>
                       {f.nome}

@@ -23,15 +23,17 @@ import {
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import FormInput from "@/components/shared/FormInput";
+import FormCurrencyInput from "@/components/shared/FormCurrencyInput";
 import movimentacaoService from "@/services/movimentacao.service";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import {
   validateQuantity,
   validateMovementObservation,
   validateMovementType,
+  validatePrice,
   sanitizeInput,
 } from "@/utils/validators";
-import { formatQuantityInput } from "@/utils/formatters";
+import { formatQuantityInput, parseCurrencyBR } from "@/utils/formatters";
 
 const TIPOS_MOVIMENTACAO = [
   { value: "Entrada", label: "Entrada" },
@@ -64,6 +66,10 @@ export default function MovimentacaoForm({
       sanitizer: (val) => formatQuantityInput(String(val)),
       validateOnChange: true,
     },
+    valorUnitario: {
+      validator: validatePrice,
+      validateOnChange: false,
+    },
     observacao: {
       validator: validateMovementObservation,
       sanitizer: sanitizeInput,
@@ -84,10 +90,18 @@ export default function MovimentacaoForm({
     {
       tipo: "Entrada",
       quantidade: "",
+      valorUnitario: "",
       observacao: "",
     },
     validators,
   );
+
+  // Calcula valor total automaticamente
+  const valorTotal =
+    values.quantidade && values.valorUnitario
+      ? Number(values.quantidade) *
+        parseCurrencyBR(String(values.valorUnitario))
+      : 0;
 
   useEffect(() => {
     if (open) {
@@ -101,11 +115,21 @@ export default function MovimentacaoForm({
     setSaving(true);
 
     try {
+      const valorUnitarioParsed = formValues.valorUnitario
+        ? parseCurrencyBR(String(formValues.valorUnitario))
+        : null;
+
+      const valorTotalCalculado = valorUnitarioParsed
+        ? Number(formValues.quantidade) * valorUnitarioParsed
+        : null;
+
       const data = {
         ...formValues,
         produtoId,
         estabelecimentoId,
         quantidade: Number(formValues.quantidade),
+        valorUnitario: valorUnitarioParsed,
+        valorTotal: valorTotalCalculado,
         data: new Date().toISOString(),
       };
 
@@ -210,6 +234,25 @@ export default function MovimentacaoForm({
             placeholder="0"
             required={true}
             hint="Quantidade a movimentar"
+          />
+
+          {/* Valor Unitário */}
+          <FormCurrencyInput
+            label="Valor Unitário (opcional)"
+            name="valorUnitario"
+            value={values.valorUnitario}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={
+              shouldShowError("valorUnitario")
+                ? errors.valorUnitario
+                : undefined
+            }
+            hint={
+              valorTotal > 0
+                ? `Total: R$ ${valorTotal.toFixed(2).replace(".", ",")}`
+                : undefined
+            }
           />
 
           {/* Observação */}

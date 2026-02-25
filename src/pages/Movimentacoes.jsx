@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import movimentacaoService from "@/services/movimentacao.service";
-import { ArrowDownCircle, ArrowUpCircle, History } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle, History, Truck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -14,6 +14,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { formatCurrencyBR } from "@/utils/formatters";
 
 export default function Movimentacoes() {
   const { user, isLoadingAuth } = useAuth();
@@ -101,7 +102,7 @@ export default function Movimentacoes() {
                 key={m.id}
                 className="flex items-center justify-between p-4 hover:bg-gray-50/50 transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1">
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                       m.tipo === "Entrada" ? "bg-emerald-50" : "bg-red-50"
@@ -113,21 +114,54 @@ export default function Movimentacoes() {
                       <ArrowUpCircle className="w-5 h-5 text-red-500" />
                     )}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-gray-900">
                       {m.produto?.nome || "Produto"}
                     </p>
-                    <p className="text-xs text-gray-400">
-                      {m.data
-                        ? format(new Date(m.data), "dd 'de' MMM, yyyy", {
-                            locale: ptBR,
-                          })
-                        : ""}
-                      {m.observacao ? ` · ${m.observacao}` : ""}
-                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-xs text-gray-400">
+                        {m.data
+                          ? format(new Date(m.data), "dd 'de' MMM, yyyy", {
+                              locale: ptBR,
+                            })
+                          : ""}
+                      </p>
+                      {m.produto?.fornecedor && (
+                        <>
+                          <span className="text-xs text-gray-300">•</span>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Truck className="w-3 h-3" />
+                            <span>{m.produto.fornecedor.nome}</span>
+                          </div>
+                        </>
+                      )}
+                      {m.observacao && (
+                        <>
+                          <span className="text-xs text-gray-300">•</span>
+                          <span className="text-xs text-gray-400">
+                            {m.observacao}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {(m.valorUnitario || m.valorTotal) && (
+                      <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                        {m.valorUnitario && (
+                          <span>{formatCurrencyBR(m.valorUnitario)} un.</span>
+                        )}
+                        {m.valorTotal && (
+                          <>
+                            <span className="text-gray-300">•</span>
+                            <span className="font-medium">
+                              Total: {formatCurrencyBR(m.valorTotal)}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right ml-3">
                   <span
                     className={`text-lg font-bold ${m.tipo === "Entrada" ? "text-emerald-600" : "text-red-500"}`}
                   >

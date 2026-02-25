@@ -10,10 +10,10 @@ import {
   History,
   Menu,
   X,
-  Beer,
   LogOut,
   Crown,
   Settings,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,9 +42,11 @@ export default function Layout({ children, currentPageName }) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-lg border-b border-gray-100 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-emerald-100 rounded-lg">
-              <Beer className="w-5 h-5 text-emerald-600" />
-            </div>
+            <img
+              src="/barstock_logo_transparent.png"
+              alt="BarStock"
+              className="w-8 h-8"
+            />
             <span className="font-bold text-gray-900">BarStock</span>
           </div>
           <button
@@ -98,6 +100,16 @@ export default function Layout({ children, currentPageName }) {
                 <LogOut className="w-5 h-5" />
                 Sair
               </button>
+              <a
+                href="https://forms.gle/mMRy68gLFeq9XhSF6"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-purple-50 hover:text-purple-700"
+              >
+                <MessageSquare className="w-5 h-5" />
+                Feedback
+              </a>
               <Link
                 to={createPageUrl("PlanStatus")}
                 onClick={() => setMobileOpen(false)}
@@ -122,9 +134,11 @@ export default function Layout({ children, currentPageName }) {
         <div className="flex flex-col flex-grow bg-white border-r border-gray-100 px-4 py-6">
           {/* Logo */}
           <div className="flex items-center gap-3 px-3 mb-8">
-            <div className="p-2 bg-emerald-100 rounded-xl">
-              <Beer className="w-6 h-6 text-emerald-600" />
-            </div>
+            <img
+              src="/barstock_logo_transparent.png"
+              alt="BarStock"
+              className="w-14 h-14"
+            />
             <div>
               <span className="font-bold text-gray-900 text-lg">BarStock</span>
               <p className="text-xs text-gray-400">Controle de Estoque</p>
@@ -173,6 +187,15 @@ export default function Layout({ children, currentPageName }) {
               <LogOut className="w-5 h-5" />
               Sair
             </button>
+            <a
+              href="https://forms.gle/mMRy68gLFeq9XhSF6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-500 hover:bg-purple-50 hover:text-purple-700 w-full"
+            >
+              <MessageSquare className="w-5 h-5" />
+              Feedback
+            </a>
             <Link
               to={createPageUrl("PlanStatus")}
               className={cn(

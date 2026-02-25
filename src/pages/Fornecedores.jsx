@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import fornecedorService from "@/services/fornecedor.service";
-import { Pencil, Trash2, Phone, Clock } from "lucide-react";
+import { Pencil, Trash2, Phone, Clock, Mail, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/AuthContext";
@@ -8,6 +8,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import FornecedorForm from "@/components/fornecedores/FornecedorForm";
 import { Truck } from "lucide-react";
+import { formatPhoneBR, formatCNPJ } from "@/utils/formatters";
 
 export default function Fornecedores() {
   const { user, isLoadingAuth } = useAuth();
@@ -113,6 +114,7 @@ export default function Fornecedores() {
                     variant="ghost"
                     className="h-8 w-8 rounded-lg"
                     onClick={() => {
+                      console.log("[Fornecedores] Clicou editar:", f);
                       setEditing(f);
                       setFormOpen(true);
                     }}
@@ -133,7 +135,19 @@ export default function Fornecedores() {
                 {f.telefone && (
                   <div className="flex items-center gap-2 text-gray-500">
                     <Phone className="w-3.5 h-3.5" />
-                    {f.telefone}
+                    {formatPhoneBR(f.telefone)}
+                  </div>
+                )}
+                {f.cnpj && (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <Building2 className="w-3.5 h-3.5" />
+                    {formatCNPJ(f.cnpj)}
+                  </div>
+                )}
+                {f.email && (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <Mail className="w-3.5 h-3.5" />
+                    <span className="truncate">{f.email}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-2 text-gray-500">

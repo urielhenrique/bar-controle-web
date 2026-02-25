@@ -98,10 +98,25 @@ export default function FormCurrencyInput({
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     // Formata o valor quando sair do campo
+    let finalValue = localValue;
+
     if (localValue && localValue.trim()) {
       const formatted = formatCurrencyInput(localValue);
       setLocalValue(formatted);
+      finalValue = formatted;
     }
+
+    // Atualiza o estado do formulário com o valor formatado
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: finalValue,
+        name: name,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    onChange(syntheticEvent);
 
     if (onBlur) {
       onBlur(e);

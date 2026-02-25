@@ -3,7 +3,7 @@
  * Com máscara automática e validação com linha verificadora
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AlertCircle, Building2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,19 +49,65 @@ export default function FormCNPJInput({
   hint,
 }: FormCNPJInputProps) {
   const hasError = !!error;
+  const [localValue, setLocalValue] = useState(value || "");
+
+  useEffect(() => {
+    // Formata o valor recebido do formulário pai
+    const formatted = value ? formatCNPJ(value) : "";
+    setLocalValue(formatted);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCNPJ(e.target.value);
+    const input = e.target.value;
 
+    // Apenas remove caracteres não numéricos temporariamente para validação
+    const digitsOnly = input.replace(/\D/g, "");
+
+    // Limita a 14 dígitos como o formatador faz
+    const limited = digitsOnly.substring(0, 14);
+
+    // Formata para exibição enquanto digita
+    const formatted = formatCNPJ(limited);
+    setLocalValue(formatted);
+
+    // Passa o valor bruto (dígitos apenas) para o formulário
     const syntheticEvent = {
       ...e,
       target: {
         ...e.target,
-        value: formatted,
+        value: limited,
       },
-    };
+    } as React.ChangeEvent<HTMLInputElement>;
 
-    onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
+    onChange(syntheticEvent);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Formata o valor quando sair do campo
+    let finalValue = localValue;
+
+    if (localValue && localValue.trim()) {
+      const formatted = formatCNPJ(localValue);
+      setLocalValue(formatted);
+      finalValue = formatted;
+    }
+
+    // Atualiza o estado do formulário com o valor formatado (dígitos apenas)
+    const digitsOnly = finalValue.replace(/\D/g, "");
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: digitsOnly,
+        name: name,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    onChange(syntheticEvent);
+
+    if (onBlur) {
+      onBlur(e);
+    }
   };
 
   return (
@@ -78,9 +124,9 @@ export default function FormCNPJInput({
         <Input
           type="text"
           name={name}
-          value={value}
+          value={localValue}
           onChange={handleChange}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}
           maxLength={18}

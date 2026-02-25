@@ -3,11 +3,11 @@
  * Com máscara automática e validação
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AlertCircle, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatPhoneBR } from "@/utils/formatters";
+import { formatPhoneBR, parsePhoneBR } from "@/utils/formatters";
 
 interface FormPhoneInputProps {
   label: string;
@@ -50,19 +50,64 @@ export default function FormPhoneInput({
   hint,
 }: FormPhoneInputProps) {
   const hasError = !!error;
+  const [localValue, setLocalValue] = useState(value || "");
+
+  useEffect(() => {
+    // Formata o valor recebido do formulário pai
+    const formatted = value ? formatPhoneBR(value) : "";
+    setLocalValue(formatted);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneBR(e.target.value);
+    const input = e.target.value;
 
+    // Apenas remove caracteres não numéricos temporariamente para validação
+    const digitsOnly = input.replace(/\D/g, "");
+
+    // Limita a 11 dígitos como o formatador faz
+    const limited = digitsOnly.substring(0, 11);
+
+    // Formata para exibição enquanto digita
+    const formatted = formatPhoneBR(limited);
+    setLocalValue(formatted);
+
+    // Passa o valor bruto (dígitos apenas) para o formulário
     const syntheticEvent = {
       ...e,
       target: {
         ...e.target,
-        value: formatted,
+        value: limited,
       },
-    };
+    } as React.ChangeEvent<HTMLInputElement>;
 
-    onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
+    onChange(syntheticEvent);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Formata o valor quando sair do campo
+    let finalValue = localValue;
+
+    if (localValue && localValue.trim()) {
+      const formatted = formatPhoneBR(localValue);
+      setLocalValue(formatted);
+      finalValue = formatted;
+    }
+
+    // Atualiza o estado do formulário com o valor formatado
+    const syntheticEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        value: finalValue ? parsePhoneBR(finalValue) : "",
+        name: name,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    onChange(syntheticEvent);
+
+    if (onBlur) {
+      onBlur(e);
+    }
   };
 
   return (
@@ -79,9 +124,9 @@ export default function FormPhoneInput({
         <Input
           type="text"
           name={name}
-          value={value}
+          value={localValue}
           onChange={handleChange}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}
           maxLength={15}
