@@ -104,6 +104,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const updatedUser = await authService.getCurrentUser();
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error("Erro ao atualizar dados do usuário:", error);
+    }
+  };
+
   const navigateToLogin = () => {
     window.location.href = "/login";
   };
@@ -120,6 +130,7 @@ export const AuthProvider = ({ children }) => {
         loginWithGoogle,
         register,
         logout,
+        refreshUser,
         navigateToLogin,
       }}
     >

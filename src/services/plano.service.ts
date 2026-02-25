@@ -93,16 +93,20 @@ class PlanoService {
    */
   async getUsage() {
     try {
-      const response = await apiClient.get("/plano/uso");
+      const [status, limites] = await Promise.all([
+        apiClient.get("/plano/uso"),
+        apiClient.get("/plano/limites"),
+      ]);
 
-      // Mapear resposta para o formato esperado
+      // Backend retorna: { produtos, usuarios, movimentacaoMes }
+      // E: { plano, limiteProdutos, limiteUsuarios, limiteMovimentacaoMensal }
       return {
-        produtosCriados: response.produtosCriados || 0,
-        limiteProdutos: response.limiteProdutos || 50,
-        usuariosCriados: response.usuariosCriados || 0,
-        limiteUsuarios: response.limiteUsuarios || 1,
-        movimentacoesMes: response.movimentacoesMes || 0,
-        limiteMovimentacaoMensal: response.limiteMovimentacaoMensal || 100,
+        produtosCriados: status.produtos || 0,
+        limiteProdutos: limites.limiteProdutos || 50,
+        usuariosCriados: status.usuarios || 0,
+        limiteUsuarios: limites.limiteUsuarios || 1,
+        movimentacoesMes: status.movimentacaoMes || 0,
+        limiteMovimentacaoMensal: limites.limiteMovimentacaoMensal || 100,
       };
     } catch (error) {
       console.error("Erro ao obter uso de recursos:", error);

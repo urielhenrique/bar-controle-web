@@ -15,6 +15,7 @@ export interface User {
   role: string;
   estabelecimentoId?: string;
   estabelecimentoNome?: string;
+  plano?: string; // FREE ou PRO
 }
 
 export interface Estabelecimento {

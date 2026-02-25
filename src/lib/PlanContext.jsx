@@ -22,6 +22,10 @@ export const PlanProvider = ({ children }) => {
     try {
       const subInfo = await billingService.getSubscriptionInfo();
       setSubscription(subInfo);
+      // Atualizar o plano também
+      if (subInfo?.status === "active") {
+        setPlan("PRO");
+      }
     } catch (error) {
       // Silenciar erros esperados
       const isExpectedError =

@@ -40,7 +40,7 @@ export default function PlanoSection() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/plan-status")}
+            onClick={() => navigate("/PlanStatus")}
             className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2"
           >
             Ver Detalhes <ArrowRight className="w-4 h-4" />
@@ -61,7 +61,7 @@ export default function PlanoSection() {
             {sendingReport ? "Enviando..." : "Relatório de Uso"}
           </button>
           <button
-            onClick={() => navigate("/plan-status")}
+            onClick={() => navigate("/PlanStatus")}
             className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-sm font-medium transition-colors text-slate-700"
           >
             Gerenciar <ArrowRight className="w-4 h-4" />
@@ -121,7 +121,7 @@ export default function PlanoSection() {
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <button
-              onClick={() => navigate("/plan-status")}
+              onClick={() => navigate("/upgrade")}
               className="text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors font-medium flex items-center gap-2"
             >
               Ver Planos <ArrowRight className="w-4 h-4" />

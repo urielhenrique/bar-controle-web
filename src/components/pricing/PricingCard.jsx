@@ -1,4 +1,5 @@
-import { Check } from "lucide-react";
+import { Check, Crown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function PricingCard({
   title,
@@ -8,150 +9,86 @@ export default function PricingCard({
   isHighlighted,
   onUpgrade,
   buttonText = "Escolher Plano",
+  isCurrentPlan = false,
 }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (isCurrentPlan) {
+      navigate("/");
+    } else if (onUpgrade) {
+      onUpgrade();
+    }
+  };
+
   return (
     <div
-      style={{
-        background: "#ffffff",
-        border: `2px solid ${isHighlighted ? "#4f46e5" : "#e2e8f0"}`,
-        borderRadius: "12px",
-        padding: "32px",
-        boxShadow:
-          "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-        position: "relative",
-        transform: isHighlighted ? "scale(1.05)" : "scale(1)",
-        transition: "all 200ms ease-in-out",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className={`relative bg-white rounded-2xl shadow-lg border-2 transition-all duration-300 hover:shadow-2xl ${
+        isHighlighted
+          ? "border-emerald-500 scale-105"
+          : "border-gray-200 hover:border-gray-300"
+      }`}
     >
       {isHighlighted && (
-        <div
-          style={{
-            position: "absolute",
-            top: "-12px",
-            left: "20px",
-            background: "#4f46e5",
-            color: "white",
-            padding: "4px 12px",
-            borderRadius: "8px",
-            fontSize: "12px",
-            fontWeight: "700",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-          }}
-        >
-          RECOMENDADO
+        <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
+            <Crown className="w-4 h-4" />
+            RECOMENDADO
+          </div>
         </div>
       )}
 
-      <h3
-        style={{
-          fontSize: "20px",
-          fontWeight: "700",
-          marginBottom: "8px",
-          color: "#0f172a",
-        }}
-      >
-        {title}
-      </h3>
+      <div className="p-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
+          <p className="text-gray-600 text-sm">{description}</p>
+        </div>
 
-      <p
-        style={{
-          fontSize: "14px",
-          color: "#64748b",
-          marginBottom: "24px",
-        }}
-      >
-        {description}
-      </p>
+        {/* Price */}
+        <div className="text-center mb-8 pb-8 border-b border-gray-100">
+          <div className="flex items-baseline justify-center gap-2">
+            <span className="text-5xl font-bold text-gray-900">{price}</span>
+            {price !== "Grátis" && (
+              <span className="text-gray-500 text-lg">/mês</span>
+            )}
+          </div>
+        </div>
 
-      <div style={{ marginBottom: "24px" }}>
-        <span
-          style={{
-            fontSize: "32px",
-            fontWeight: "700",
-            color: "#0f172a",
-          }}
-        >
-          {price}
-        </span>
-        {price !== "Grátis" && (
-          <span
-            style={{
-              fontSize: "14px",
-              color: "#64748b",
-              marginLeft: "8px",
-            }}
-          >
-            / mês
-          </span>
-        )}
-      </div>
-
-      <button
-        onClick={onUpgrade}
-        style={{
-          background: isHighlighted ? "#4f46e5" : "#e2e8f0",
-          color: isHighlighted ? "white" : "#0f172a",
-          padding: "16px 24px",
-          border: "none",
-          borderRadius: "8px",
-          fontWeight: "600",
-          cursor: "pointer",
-          width: "100%",
-          marginBottom: "24px",
-          transition: "all 150ms ease-in-out",
-        }}
-        onMouseEnter={(e) => {
-          if (isHighlighted) {
-            e.target.style.background = "#4338ca";
-          } else {
-            e.target.style.background = "#cbd5e1";
-          }
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.background = isHighlighted ? "#4f46e5" : "#e2e8f0";
-        }}
-      >
-        {buttonText}
-      </button>
-
-      <div
-        style={{
-          flex: 1,
-          borderTop: "1px solid #e2e8f0",
-          paddingTop: "24px",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "14px",
-            fontWeight: "600",
-            color: "#0f172a",
-            marginBottom: "16px",
-          }}
-        >
-          Incluso:
-        </p>
-        <ul>
+        {/* Features */}
+        <div className="space-y-4 mb-8">
+          <p className="text-sm font-semibold text-gray-900 mb-4">Incluso:</p>
           {features.map((feature, idx) => (
-            <li
-              key={idx}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginBottom: "8px",
-                fontSize: "14px",
-                color: "#64748b",
-              }}
-            >
-              <Check size={16} color="#4f46e5" />
-              {feature}
-            </li>
+            <div key={idx} className="flex items-start gap-3">
+              <div
+                className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                  isHighlighted ? "bg-emerald-100" : "bg-gray-100"
+                }`}
+              >
+                <Check
+                  className={`w-3.5 h-3.5 ${
+                    isHighlighted ? "text-emerald-600" : "text-gray-600"
+                  }`}
+                />
+              </div>
+              <span className="text-gray-700 text-sm">{feature}</span>
+            </div>
           ))}
-        </ul>
+        </div>
+
+        {/* Button */}
+        <button
+          onClick={handleClick}
+          className={`w-full py-4 px-6 rounded-xl font-semibold text-base transition-all duration-200 ${
+            isHighlighted
+              ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl"
+              : isCurrentPlan
+                ? "bg-gray-100 text-gray-600 cursor-pointer hover:bg-gray-200"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-900"
+          }`}
+        >
+          {buttonText}
+        </button>
       </div>
     </div>
   );
