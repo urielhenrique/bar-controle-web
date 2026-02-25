@@ -205,8 +205,11 @@ class ApiClient {
    */
   private handleError(error: any): Error {
     if (error.response) {
-      // Erro da API
-      const message = error.response.data?.message || error.message;
+      // Erro da API - suporta tanto 'message' quanto 'error'
+      const message =
+        error.response.data?.message ||
+        error.response.data?.error ||
+        error.message;
       const apiError = new Error(message) as Error & {
         status?: number;
         data?: unknown;

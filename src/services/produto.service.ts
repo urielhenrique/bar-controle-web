@@ -31,6 +31,12 @@ export interface CreateProdutoDTO {
 
 export interface UpdateProdutoDTO extends Partial<CreateProdutoDTO> {}
 
+export interface PaginatedProdutos {
+  data: Produto[];
+  nextCursor: string | null;
+  hasMore: boolean;
+}
+
 class ProdutoService {
   /**
    * Obter todos os produtos com filtros opcionais
@@ -98,10 +104,62 @@ class ProdutoService {
   }
 
   /**
-   * Obter produtos por estabelecimento
+   * Obter produtos por estabelecimento com paginação
+   */
+  async getByEstabelecimentoPaginado(
+    estabelecimentoId: string,
+    cursor?: string,
+    limit: number = 20,
+  ): Promise<PaginatedProdutos> {
+    const params: Record<string, any> = { estabelecimentoId, limit };
+    if (cursor) params.cursor = cursor;
+
+    try {
+      const response = await apiClient.get<PaginatedProdutos>(
+        "/produtos",
+        params,
+      );
+
+      // A API retorna: { data: [...], nextCursor, hasMore }
+      if (
+        response &&
+        typeof response === "object" &&
+        Array.isArray(response.data)
+      ) {
+        return {
+          data: response.data,
+          nextCursor: response.nextCursor || null,
+          hasMore: response.hasMore || false,
+        };
+      }
+
+      return {
+        data: [],
+        nextCursor: null,
+        hasMore: false,
+      };
+    } catch (error) {
+      console.error("[ProdutoService] Erro ao buscar produtos:", error);
+      return {
+        data: [],
+        nextCursor: null,
+        hasMore: false,
+      };
+    }
+  }
+
+  /**
+   * Obter produtos por estabelecimento (sem paginação - para compatibilidade)
    */
   async getByEstabelecimento(estabelecimentoId: string): Promise<Produto[]> {
-    return this.getAll({ estabelecimentoId });
+    return this.getAll({ estabelecimentoId }, undefined, 1000);
+  }
+
+  /**
+   * Importar produtos em lote
+   */
+  async importarLote(produtos: any[]): Promise<any> {
+    return apiClient.post<any>("/produtos/importar-lote", { produtos });
   }
 }
 
