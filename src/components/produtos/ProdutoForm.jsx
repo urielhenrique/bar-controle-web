@@ -142,26 +142,27 @@ export default function ProdutoForm({
       setFieldValue("precoCompra", data?.precoCompra ?? 0);
       setFieldValue("precoVenda", data?.precoVenda ?? 0);
       setFieldValue("fornecedorId", data?.fornecedorId || "");
-      if (produto) {
-        applyProdutoValues(produto);
-
-        if (!produto.id) return;
-
-        try {
-          const fullProduto = await produtoService.getById(produto.id);
-          if (!isActive) return;
-          applyProdutoValues(fullProduto);
-        } catch (error) {
-          console.warn("Erro ao carregar produto para edição:", error);
-        }
-
-        return;
-      }
-
       resetValues();
     };
 
-    loadProduto();
+    const loadProduto = async () => {
+      if (!produto?.id) return;
+
+      try {
+        const fullProduto = await produtoService.getById(produto.id);
+        if (!isActive) return;
+        applyProdutoValues(fullProduto);
+      } catch (error) {
+        console.warn("Erro ao carregar produto para edição:", error);
+      }
+    };
+
+    if (produto) {
+      applyProdutoValues(produto);
+      loadProduto();
+    } else {
+      applyProdutoValues({});
+    }
 
     return () => {
       isActive = false;
