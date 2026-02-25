@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { AlertCircle, DollarSign } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { parseCurrencyBR } from "@/utils/formatters";
+import { parseCurrencyBR, formatCurrencyInput } from "@/utils/formatters";
 
 interface FormCurrencyInputProps {
   label: string;
@@ -56,8 +56,24 @@ export default function FormCurrencyInput({
 }: FormCurrencyInputProps) {
   const hasError = !!error;
 
+  // Converte o valor para número se for string
+  const numericValue =
+    typeof value === "string" ? parseCurrencyBR(value) : Number(value) || 0;
+
+  // Define o valor de display
+  const displayValue = numericValue === 0 ? "" : String(numericValue);
+
+  const [localValue, setLocalValue] = useState(displayValue);
+
+  useEffect(() => {
+    setLocalValue(displayValue);
+  }, [value]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const sanitized = e.target.value.replace(/[^\d.,]/g, "");
+    const input = e.target.value;
+
+    // Sanitiza para remover tudo exceto números, vírgula e ponto
+    const sanitized = input.replace(/[^\d.,]/g, "");
 
     setLocalValue(sanitized);
 
@@ -68,36 +84,27 @@ export default function FormCurrencyInput({
         ...e.target,
         value: sanitized,
       },
-    };
+    } as React.ChangeEvent<HTMLInputElement>;
 
-    onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
+    onChange(syntheticEvent);
   };
 
-  const rawValue = String(value ?? "");
-  const displayValue =
-    rawValue === "0" || rawValue === "0,00" || rawValue === "0.00"
-      ? ""
-      : rawValue;
-  const numericValue = parseCurrencyBR(String(value));
-
-  const [localValue, setLocalValue] = useState(displayValue);
-
-  useEffect(() => {
-    setLocalValue(displayValue);
-  }, [displayValue]);
-
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (rawValue === "0" || rawValue === "0,00" || rawValue === "0.00") {
-      setLocalValue("");
-      const syntheticEvent = {
-        ...e,
-        target: {
-          ...e.target,
-          value: "",
-        },
-      };
+    // Deixa o usuário digitar livremente
+    if (localValue === "") {
+      e.target.select();
+    }
+  };
 
-      onChange(syntheticEvent as React.ChangeEvent<HTMLInputElement>);
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Formata o valor quando sair do campo
+    if (localValue && localValue.trim()) {
+      const formatted = formatCurrencyInput(localValue);
+      setLocalValue(formatted);
+    }
+
+    if (onBlur) {
+      onBlur(e);
     }
   };
 
@@ -127,7 +134,7 @@ export default function FormCurrencyInput({
           name={name}
           value={localValue}
           onChange={handleChange}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}

@@ -133,16 +133,20 @@ export default function ProdutoForm({
     let isActive = true;
 
     const applyProdutoValues = (data) => {
-      setFieldValue("nome", data?.nome || "");
-      setFieldValue("descricao", data?.descricao || "");
-      setFieldValue("categoria", data?.categoria || "Cerveja");
-      setFieldValue("volume", data?.volume || "600ml");
-      setFieldValue("estoqueAtual", data?.estoqueAtual ?? 0);
-      setFieldValue("estoqueMinimo", data?.estoqueMinimo ?? 5);
-      setFieldValue("precoCompra", data?.precoCompra ?? 0);
-      setFieldValue("precoVenda", data?.precoVenda ?? 0);
-      setFieldValue("fornecedorId", data?.fornecedorId || "");
-      resetValues();
+      if (!data) {
+        resetValues();
+        return;
+      }
+
+      setFieldValue("nome", data.nome || "");
+      setFieldValue("descricao", data.descricao || "");
+      setFieldValue("categoria", data.categoria || "Cerveja");
+      setFieldValue("volume", data.volume || "600ml");
+      setFieldValue("estoqueAtual", data.estoqueAtual ?? 0);
+      setFieldValue("estoqueMinimo", data.estoqueMinimo ?? 5);
+      setFieldValue("precoCompra", data.precoCompra || 0);
+      setFieldValue("precoVenda", data.precoVenda || 0);
+      setFieldValue("fornecedorId", data.fornecedorId || "");
     };
 
     const loadProduto = async () => {
@@ -157,11 +161,11 @@ export default function ProdutoForm({
       }
     };
 
-    if (produto) {
+    if (produto?.id) {
       applyProdutoValues(produto);
       loadProduto();
     } else {
-      applyProdutoValues({});
+      resetValues();
     }
 
     return () => {
@@ -186,14 +190,25 @@ export default function ProdutoForm({
     setSaving(true);
 
     try {
+      // Converte preços para números, tratando string ou número
+      const precoCompra =
+        typeof formValues.precoCompra === "string"
+          ? parseCurrencyBR(formValues.precoCompra)
+          : Number(formValues.precoCompra) || 0;
+
+      const precoVenda =
+        typeof formValues.precoVenda === "string"
+          ? parseCurrencyBR(formValues.precoVenda)
+          : Number(formValues.precoVenda) || 0;
+
       const data = {
         ...formValues,
         estabelecimentoId,
         status: "OK",
-        estoqueAtual: Number(formValues.estoqueAtual),
-        estoqueMinimo: Number(formValues.estoqueMinimo),
-        precoCompra: parseCurrencyBR(String(formValues.precoCompra)),
-        precoVenda: parseCurrencyBR(String(formValues.precoVenda)),
+        estoqueAtual: Number(formValues.estoqueAtual) || 0,
+        estoqueMinimo: Number(formValues.estoqueMinimo) || 0,
+        precoCompra,
+        precoVenda,
       };
 
       if (produto) {
