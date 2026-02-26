@@ -14,7 +14,9 @@ import {
   LogIn,
   Eye,
   EyeOff,
+  CheckCircle,
 } from "lucide-react";
+import apiClient from "@/api/api";
 
 export default function LoginV2() {
   const [email, setEmail] = useState("");
@@ -26,6 +28,8 @@ export default function LoginV2() {
   const [tab, setTab] = useState("login"); // login ou signup
   const [nome, setNome] = useState("");
   const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
   const navigate = useNavigate();
   const { login, loginWithGoogle, register, authError } = useAuth();
 
@@ -67,9 +71,10 @@ export default function LoginV2() {
         return;
       }
 
-      // Criar conta e fazer login automaticamente
+      // Criar conta - verificação de email necessária
       await register(nomeEstabelecimento, nome, email, password);
-      navigate("/");
+      setSignupEmail(email);
+      setSignupSuccess(true);
     } catch (err) {
       setError(err.message || "Erro ao criar conta");
     } finally {
@@ -98,10 +103,24 @@ export default function LoginV2() {
     setError("Erro ao autenticar com Google");
   };
 
+  const handleSendVerificationEmail = async () => {
+    try {
+      setIsLoading(true);
+      await apiClient.post("/auth/send-verification-email", { email });
+      setError(
+        "Email de verificação reenviado! Verifique sua caixa de entrada.",
+      );
+    } catch (err) {
+      console.error("Erro ao enviar email:", err);
+      setError("Erro ao reenviar email de verificação");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
-        {/* Logo e Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-10">
             <img
@@ -122,7 +141,6 @@ export default function LoginV2() {
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-4 mb-8">
           <button
             onClick={() => setTab("login")}
@@ -148,7 +166,6 @@ export default function LoginV2() {
           </button>
         </div>
 
-        {/* Error Alert */}
         {authError?.type === "session_expired" && (
           <Alert className="mb-6 bg-red-900/20 border-red-500/30 rounded-lg">
             <AlertCircle className="h-4 w-4 text-red-500" />
@@ -157,7 +174,31 @@ export default function LoginV2() {
             </AlertDescription>
           </Alert>
         )}
-        {error && (
+
+        {error?.includes("Verifique seu email") && (
+          <Alert className="mb-6 bg-yellow-900/20 border-yellow-500/30 rounded-lg space-y-3">
+            <div className="flex gap-2">
+              <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <AlertDescription className="text-yellow-100">
+                  Email não verificado. Verifique sua caixa de entrada ou clique
+                  no botão abaixo para reenviar o email de verificação.
+                </AlertDescription>
+                <Button
+                  type="button"
+                  onClick={handleSendVerificationEmail}
+                  variant="outline"
+                  className="mt-2 border-yellow-500 text-yellow-500 hover:bg-yellow-900/20 text-sm"
+                  disabled={isLoading}
+                >
+                  Reenviar Email de Verificação
+                </Button>
+              </div>
+            </div>
+          </Alert>
+        )}
+
+        {error && !error.includes("Verifique seu email") && (
           <Alert className="mb-6 bg-red-900/20 border-red-500/30 rounded-lg">
             <AlertCircle className="h-4 w-4 text-red-500" />
             <AlertDescription className="text-red-400 ml-2">
@@ -166,8 +207,43 @@ export default function LoginV2() {
           </Alert>
         )}
 
-        {/* Login Form */}
-        {tab === "login" && (
+        {signupSuccess && (
+          <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6 text-center space-y-4">
+            <div className="flex justify-center">
+              <CheckCircle className="w-12 h-12 text-green-400" />
+            </div>
+            <h2 className="text-xl font-bold text-green-300">Conta Criada!</h2>
+            <p className="text-green-200">
+              Enviamos um email de verificação para{" "}
+              <strong>{signupEmail}</strong>
+            </p>
+            <p className="text-sm text-green-300 bg-green-900/30 p-3 rounded">
+              Clique no link no email para verificar sua conta. Você poderá
+              fazer login em seguida.
+            </p>
+            <Button
+              onClick={() => {
+                setSignupSuccess(false);
+                setTab("login");
+                setEmail(signupEmail);
+                setPassword("");
+              }}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2"
+            >
+              Ir para Login
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setSignupSuccess(false)}
+              className="w-full border-green-500 text-green-400 hover:bg-green-900/20"
+            >
+              Criar Outra Conta
+            </Button>
+          </div>
+        )}
+
+        {tab === "login" && !signupSuccess && (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <Label className="text-slate-200 mb-2 block">Email</Label>
@@ -229,7 +305,15 @@ export default function LoginV2() {
               )}
             </Button>
 
-            {/* Google OAuth Button */}
+            <div className="text-center">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors font-semibold"
+              >
+                Esqueci minha senha
+              </Link>
+            </div>
+
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-600"></div>
@@ -254,8 +338,7 @@ export default function LoginV2() {
           </form>
         )}
 
-        {/* Signup Form */}
-        {tab === "signup" && (
+        {tab === "signup" && !signupSuccess && (
           <form onSubmit={handleSignup} className="space-y-4">
             <div>
               <Label className="text-slate-200 mb-2 block">
@@ -343,7 +426,6 @@ export default function LoginV2() {
           </form>
         )}
 
-        {/* Footer */}
         <div className="mt-8 text-center text-sm text-slate-400 space-y-4">
           <p>Primeiros passos no Bar Stock?</p>
           <p className="mt-2">
@@ -352,7 +434,6 @@ export default function LoginV2() {
           </p>
           <p className="text-slate-500">Senha: Admin@123456</p>
 
-          {/* Legal Links */}
           <div className="flex flex-wrap gap-4 justify-center mt-6 pt-4 border-t border-slate-700">
             <Link
               to="/privacy-policy"
@@ -374,7 +455,6 @@ export default function LoginV2() {
             </a>
           </div>
 
-          {/* Copyright */}
           <div className="mt-6 pt-4 border-t border-slate-700">
             <p className="text-xs text-slate-500">
               Criado e desenvolvido por{" "}
