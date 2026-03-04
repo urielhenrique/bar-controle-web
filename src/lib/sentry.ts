@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
 
 /**
  * Initialize Sentry for React frontend
