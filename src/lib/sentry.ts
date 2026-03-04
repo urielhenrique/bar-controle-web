@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/tracing";
+import { browserTracingIntegration } from "@sentry/react";
 
 /**
  * Initialize Sentry for React frontend
@@ -24,7 +24,7 @@ export const initSentry = () => {
     tracesSampleRate: environment === "production" ? 0.1 : 1.0,
     // Integrate with routing
     integrations: [
-      new BrowserTracing({
+      browserTracingIntegration({
         // Set sampling rate for performance monitoring
         tracingOrigins: [
           "localhost",
