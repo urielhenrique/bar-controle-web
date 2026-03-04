@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
+import * as Sentry from "@sentry/react";
 
 const API_BASE_URL =
   (import.meta.env.VITE_API_URL as string) || "http://localhost:3000";
@@ -197,29 +198,86 @@ class ApiClient {
    * Tratamento centralizado de erros
    */
   private handleError(error: any): Error {
+    let status = 0;
+    let message = error.message || "Unknown error";
+    let errorData: any = null;
+
     if (error.response) {
       // Erro da API - suporta tanto 'message' quanto 'error'
-      const message =
+      message =
         error.response.data?.message ||
         error.response.data?.error ||
         error.message;
-      const apiError = new Error(message) as Error & {
-        status?: number;
-        data?: unknown;
-      };
-      apiError.status = error.response.status;
-      apiError.data = error.response.data;
-      return apiError;
-    }
-    if (error.request) {
+      status = error.response.status;
+      errorData = error.response.data;
+
+      // Capture API errors in Sentry (excluding auth token errors)
+      if (status >= 500) {
+        // Server errors
+        Sentry.captureException(error, {
+          tags: {
+            type: "api_error",
+            status: status.toString(),
+          },
+          level: "error",
+          contexts: {
+            api: {
+              url: error.config?.url || "unknown",
+              method: error.config?.method?.toUpperCase() || "unknown",
+              status: status,
+              message: message,
+            },
+          },
+        });
+      } else if (status === 403) {
+        // Forbidden/Auth errors
+        Sentry.captureMessage("Authentication failed", {
+          level: "warning",
+          tags: {
+            type: "auth_error",
+            status: status.toString(),
+          },
+        });
+      } else if (
+        status === 402 ||
+        error.response.data?.error === "PAYMENT_REQUIRED"
+      ) {
+        // Stripe/Payment errors
+        Sentry.captureMessage("Payment processing error", {
+          level: "warning",
+          tags: {
+            type: "payment_error",
+            status: status.toString(),
+          },
+        });
+      }
+    } else if (error.request) {
       // Erro de conexão
-      const connectionError = new Error(
-        "Erro ao conectar com o servidor",
-      ) as Error & { status?: number };
-      connectionError.status = 0;
-      return connectionError;
+      message = "Erro ao conectar com o servidor";
+      status = 0;
+      Sentry.captureException(error, {
+        tags: {
+          type: "connection_error",
+        },
+        level: "warning",
+      });
+    } else {
+      // Other errors
+      Sentry.captureException(error, {
+        tags: {
+          type: "client_error",
+        },
+        level: "error",
+      });
     }
-    return new Error(error.message);
+
+    const apiError = new Error(message) as Error & {
+      status?: number;
+      data?: unknown;
+    };
+    apiError.status = status;
+    apiError.data = errorData;
+    return apiError;
   }
 }
 
