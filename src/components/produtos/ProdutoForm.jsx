@@ -32,7 +32,6 @@ import {
   validateProductDescription,
   validatePrice,
   validateQuantity,
-  sanitizeInput,
 } from "@/utils/validators";
 import { formatQuantityInput, parseCurrencyBR } from "@/utils/formatters";
 
@@ -87,12 +86,10 @@ export default function ProdutoForm({
   const validators = {
     nome: {
       validator: validateProductName,
-      sanitizer: sanitizeInput,
       validateOnChange: true,
     },
     descricao: {
       validator: validateProductDescription,
-      sanitizer: sanitizeInput,
       validateOnChange: true,
     },
     estoqueAtual: {

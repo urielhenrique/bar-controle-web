@@ -1,13 +1,5 @@
 import apiClient from "../api/api";
 
-const isRateLimitError = (error: unknown): boolean => {
-  const message = String(
-    (error as Error | undefined)?.message || "",
-  ).toLowerCase();
-  const status = (error as { status?: number } | undefined)?.status;
-  return status === 429 || message.includes("muitas requisicoes");
-};
-
 export interface User {
   id: string;
   name: string;
@@ -30,14 +22,7 @@ class AuthService {
    * Obter dados do usuário autenticado
    */
   async getCurrentUser(): Promise<User> {
-    try {
-      return await apiClient.get<User>("/auth/me");
-    } catch (error) {
-      if (isRateLimitError(error)) {
-        throw error;
-      }
-      throw new Error("Não autenticado");
-    }
+    return await apiClient.get<User>("/auth/me");
   }
 
   /**

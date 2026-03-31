@@ -15,7 +15,6 @@ import {
   validateEmail,
   validatePassword,
   validateUsername,
-  sanitizeInput,
 } from "@/utils/validators";
 
 export default function SignUpFormV2() {
@@ -30,7 +29,6 @@ export default function SignUpFormV2() {
   const validators = {
     username: {
       validator: validateUsername,
-      sanitizer: sanitizeInput,
       validateOnChange: true,
     },
     email: {

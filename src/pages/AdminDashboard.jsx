@@ -32,6 +32,13 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const getProdutosCount = (est) => {
+    if (typeof est?.produtosCount === "number") return est.produtosCount;
+    if (typeof est?._count?.produtos === "number") return est._count.produtos;
+    if (Array.isArray(est?.produtos)) return est.produtos.length;
+    return 0;
+  };
+
   useEffect(() => {
     // Verificar se é admin
     if (user?.role !== "ADMIN") {
@@ -63,9 +70,11 @@ export default function AdminDashboard() {
         usersRes = await apiClient.get("/admin/users");
       }
 
-      setUsers(
-        Array.isArray(usersRes) ? usersRes : usersRes.estabelecimentos || [],
-      );
+      const normalizedUsers = Array.isArray(usersRes)
+        ? usersRes
+        : usersRes?.data || usersRes?.estabelecimentos || [];
+
+      setUsers(normalizedUsers);
     } catch (err) {
       setError(err.message || "Erro ao carregar dados");
       console.error(err);
@@ -81,11 +90,12 @@ export default function AdminDashboard() {
 
   const handleExport = () => {
     const csv = [
-      ["Estabelecimento", "Plano", "Usuários", "Criado em"],
+      ["Estabelecimento", "Plano", "Usuários", "Produtos", "Criado em"],
       ...users.map((est) => [
         est.estabelecimentoNome || est.nome,
         est.plano || "N/A",
         est.usuarios?.length || 1,
+        getProdutosCount(est),
         new Date(est.criadoEm || est.createdAt).toLocaleDateString("pt-BR"),
       ]),
     ]
@@ -285,6 +295,9 @@ export default function AdminDashboard() {
                     Usuários
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">
+                    Produtos
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-slate-300">
@@ -296,7 +309,7 @@ export default function AdminDashboard() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="6"
                       className="px-6 py-12 text-center text-slate-400"
                     >
                       Carregando...
@@ -305,7 +318,7 @@ export default function AdminDashboard() {
                 ) : users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="6"
                       className="px-6 py-12 text-center text-slate-400"
                     >
                       Nenhum registro encontrado
@@ -333,6 +346,9 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-300">
                         {est.usuarios?.length || 1}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-300">
+                        {getProdutosCount(est)}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <span

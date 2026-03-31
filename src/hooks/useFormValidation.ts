@@ -9,7 +9,11 @@ import { useState, useCallback, useMemo } from "react";
  * Interface para configuração de validação de um campo
  */
 export interface FieldValidationConfig {
-  validator: (value: any) => { isValid: boolean; error?: string };
+  validator: (value: any) => {
+    isValid: boolean;
+    error?: string;
+    code?: string;
+  };
   sanitizer?: (value: any) => any;
   validateOnChange?: boolean; // Default: true
   validateOnBlur?: boolean; // Default: false
@@ -19,6 +23,18 @@ export interface FieldValidationConfig {
  * Map de validadores para cada campo
  */
 export type ValidatorsMap = Record<string, FieldValidationConfig>;
+
+export interface ValidationResult {
+  isValid: boolean;
+  error?: string;
+  code?: string;
+}
+
+export const isMaliciousValidationResult = (
+  result?: ValidationResult,
+): boolean => {
+  return !result?.isValid && result.code === "MALICIOUS_INPUT";
+};
 
 /**
  * Hook para gerenciar validações de formulário
@@ -118,6 +134,13 @@ export function useFormValidation<T extends Record<string, any>>(
       // Aplica sanitização se configurada
       if (validators[name]?.sanitizer) {
         processedValue = validators[name].sanitizer!(value);
+      }
+
+      // Bloqueia payloads maliciosos sem alterar a digitação de textos legítimos.
+      const changeValidation = validators[name]?.validator?.(processedValue);
+      if (isMaliciousValidationResult(changeValidation)) {
+        setErrors((prev) => ({ ...prev, [name]: changeValidation.error }));
+        return;
       }
 
       const newValues = { ...values, [name]: processedValue };

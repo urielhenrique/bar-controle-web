@@ -18,13 +18,24 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setAuthError(null);
       } catch (error) {
+        const status = error?.status;
+        const errorCode = error?.data?.error;
+        const isExpiredSession =
+          status === 401 &&
+          (errorCode === "SESSION_EXPIRED" || errorCode === "INVALID_TOKEN");
+
         // Usuário não autenticado (esperado na primeira vez)
         setUser(null);
         setIsAuthenticated(false);
-        setAuthError({
-          type: "session_expired",
-          message: "Sessao expirada. Faca login novamente.",
-        });
+
+        if (isExpiredSession) {
+          setAuthError({
+            type: "session_expired",
+            message: "Sessao expirada. Faca login novamente.",
+          });
+        } else {
+          setAuthError(null);
+        }
       } finally {
         setIsLoadingAuth(false);
       }

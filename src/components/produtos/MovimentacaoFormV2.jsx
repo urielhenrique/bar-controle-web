@@ -29,7 +29,6 @@ import {
   validateQuantity,
   validateMovementObservation,
   validateMovementType,
-  sanitizeInput,
 } from "@/utils/validators";
 import { formatQuantityInput } from "@/utils/formatters";
 
@@ -63,7 +62,6 @@ export default function MovimentacaoFormV2({
     },
     observacao: {
       validator: validateMovementObservation,
-      sanitizer: sanitizeInput,
       validateOnChange: true,
     },
   };

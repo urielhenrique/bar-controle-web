@@ -5,6 +5,8 @@
 
 import { parseCurrencyBR } from "./formatters";
 
+export const SECURITY_ERROR_CODE = "MALICIOUS_INPUT";
+
 // ============================================================================
 // 🔐 SEGURANÇA - Sanitização e Detecção de Padrões Maliciosos
 // ============================================================================
@@ -42,7 +44,7 @@ export function sanitizeInput(value: string): string {
   // Remove caracteres null
   sanitized = sanitized.replace(/\0/g, "");
 
-  return sanitized.trim();
+  return sanitized;
 }
 
 /**
@@ -64,10 +66,12 @@ export function containsMaliciousPattern(value: string): boolean {
 export function validateSafeInput(value: string): {
   isValid: boolean;
   error?: string;
+  code?: string;
 } {
   if (containsMaliciousPattern(value)) {
     return {
       isValid: false,
+      code: SECURITY_ERROR_CODE,
       error:
         "Caracteres inválidos detectados. Não são permitidas tags HTML ou scripts.",
     };

@@ -15,6 +15,7 @@ import {
   sanitizeInput,
   containsMaliciousPattern,
   validateSafeInput,
+  SECURITY_ERROR_CODE,
 
   // Produto
   validateProductName,
@@ -42,11 +43,16 @@ import {
 // ============================================================================
 
 describe("Segurança - Sanitização", () => {
-  it("deve remover script tags", () => {
+  it("deve normalizar espaços e remover caracteres de controle", () => {
+    const input = "texto\u0000  com\u001f   controle";
+    const result = sanitizeInput(input);
+    expect(result).toBe("texto com controle");
+  });
+
+  it("não deve remover conteúdo HTML automaticamente", () => {
     const input = "<script>alert('xss')</script>";
     const result = sanitizeInput(input);
-    expect(result).not.toContain("<");
-    expect(result).not.toContain(">");
+    expect(result).toContain("<script>");
   });
 
   it("deve detectar padrões maliciosos", () => {
@@ -63,6 +69,7 @@ describe("Segurança - Sanitização", () => {
     const bad = validateSafeInput("<script>alert()</script>");
     expect(bad.isValid).toBe(false);
     expect(bad.error).toBeDefined();
+    expect(bad.code).toBe(SECURITY_ERROR_CODE);
   });
 
   it("deve remover espaços múltiplos", () => {

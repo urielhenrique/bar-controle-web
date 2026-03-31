@@ -26,7 +26,6 @@ import {
   validatePhoneBR,
   validateCNPJ,
   validateEmail,
-  sanitizeInput,
 } from "@/utils/validators";
 
 export default function FornecedorForm({
@@ -43,7 +42,6 @@ export default function FornecedorForm({
   const validators = {
     nome: {
       validator: validateSupplierName,
-      sanitizer: sanitizeInput,
       validateOnChange: true,
     },
     telefone: {
