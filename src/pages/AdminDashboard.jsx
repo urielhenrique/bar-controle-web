@@ -31,6 +31,14 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState("all"); // all, free, pro, online
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 1,
+  });
 
   const getProdutosCount = (est) => {
     if (typeof est?.produtosCount === "number") return est.produtosCount;
@@ -47,6 +55,10 @@ export default function AdminDashboard() {
     }
 
     fetchData();
+  }, [filter, page]);
+
+  useEffect(() => {
+    setPage(1);
   }, [filter]);
 
   const fetchData = async () => {
@@ -61,18 +73,36 @@ export default function AdminDashboard() {
       // Buscar usuários baseado no filtro
       let usersRes;
       if (filter === "online") {
-        usersRes = await apiClient.get("/admin/users/online");
+        usersRes = await apiClient.get("/admin/users/online", { page, limit });
       } else if (filter === "free") {
-        usersRes = await apiClient.get("/admin/users/plan/free");
+        usersRes = await apiClient.get("/admin/users/plan/free", {
+          page,
+          limit,
+        });
       } else if (filter === "pro") {
-        usersRes = await apiClient.get("/admin/users/plan/pro");
+        usersRes = await apiClient.get("/admin/users/plan/pro", {
+          page,
+          limit,
+        });
       } else {
-        usersRes = await apiClient.get("/admin/users");
+        usersRes = await apiClient.get("/admin/users", { page, limit });
       }
 
       const normalizedUsers = Array.isArray(usersRes)
         ? usersRes
         : usersRes?.data || usersRes?.estabelecimentos || [];
+
+      const total = usersRes?.pagination?.total ?? usersRes?.total ?? 0;
+      const totalPages =
+        usersRes?.pagination?.totalPages ??
+        Math.max(1, Math.ceil((total || normalizedUsers.length) / limit));
+
+      setPagination({
+        page: usersRes?.pagination?.page ?? page,
+        limit: usersRes?.pagination?.limit ?? limit,
+        total,
+        totalPages,
+      });
 
       setUsers(normalizedUsers);
     } catch (err) {
@@ -230,7 +260,10 @@ export default function AdminDashboard() {
         {/* Filtros */}
         <div className="flex gap-2 mb-6 flex-wrap">
           <button
-            onClick={() => setFilter("all")}
+            onClick={() => {
+              setFilter("all");
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               filter === "all"
                 ? "bg-blue-600 text-white"
@@ -240,7 +273,10 @@ export default function AdminDashboard() {
             Todos
           </button>
           <button
-            onClick={() => setFilter("free")}
+            onClick={() => {
+              setFilter("free");
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               filter === "free"
                 ? "bg-green-600 text-white"
@@ -250,7 +286,10 @@ export default function AdminDashboard() {
             Plano FREE
           </button>
           <button
-            onClick={() => setFilter("pro")}
+            onClick={() => {
+              setFilter("pro");
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               filter === "pro"
                 ? "bg-purple-600 text-white"
@@ -260,7 +299,10 @@ export default function AdminDashboard() {
             Plano PRO
           </button>
           <button
-            onClick={() => setFilter("online")}
+            onClick={() => {
+              setFilter("online");
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               filter === "online"
                 ? "bg-yellow-600 text-white"
@@ -371,6 +413,33 @@ export default function AdminDashboard() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-700 bg-slate-900/40">
+            <p className="text-sm text-slate-400">
+              Página {pagination.page} de {pagination.totalPages} ·{" "}
+              {pagination.total} registros
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={loading || pagination.page <= 1}
+                className="px-3 py-1.5 rounded-md text-sm font-medium bg-slate-700 text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600"
+              >
+                Anterior
+              </button>
+              <button
+                onClick={() =>
+                  setPage((prev) =>
+                    Math.min(pagination.totalPages || 1, prev + 1),
+                  )
+                }
+                disabled={loading || pagination.page >= pagination.totalPages}
+                className="px-3 py-1.5 rounded-md text-sm font-medium bg-slate-700 text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600"
+              >
+                Próxima
+              </button>
+            </div>
           </div>
         </div>
       </main>
